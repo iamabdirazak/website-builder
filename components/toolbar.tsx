@@ -6,7 +6,8 @@ export default function Toolbar() {
     <header
       style={{
         height: 50,
-        background: "#fff",
+        background: "rgba(255,255,255,0.75)",
+        backdropFilter: "blur(20px) saturate(180%)",
         borderBottom: "1px solid #ddd",
         display: "flex",
         alignItems: "center",

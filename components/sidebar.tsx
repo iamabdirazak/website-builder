@@ -1,38 +1,34 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import SidebarTabs from "./SidebarTabs";
+import SidebarContent from "./SidebarContent";
 
 export default function Sidebar() {
-  const btnStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "8px 10px",
-    borderRadius: 10,
-    background: "#f0f0f0",
-    cursor: "pointer",
-    textAlign: "left",
-    marginBottom: 8,
-  };
+  const [activeTab, setActiveTab] = useState<"Pages" | "Layers" | "Assets">("Pages");
 
   return (
     <aside
       style={{
         position: "fixed",
-        top: 65,
-        left: 20,
-        width: 260,
-        height: "90vh",
-        background: "rgba(255,255,255,0.95)",
-        border: "1px solid #ddd",
-        borderRadius: 8,
-        padding: 16,
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        top: 50, // offset for toolbar
+        left: 0,
+        width: 275,
+        height: "calc(100vh - 50px)",
+        background: "rgba(255,255,255,0.75)",
+        backdropFilter: "blur(20px) saturate(180%)",
+        WebkitBackdropFilter: "blur(20px) saturate(180%)",
+        borderRight: "1px solid #ddd",
+        padding: 0,
         zIndex: 20,
-        backdropFilter: "blur(10px)",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <div style={{ fontWeight: 600, marginBottom: 8 }}>Components</div>
-      <button style={btnStyle}>Add Hero</button>
-      <button style={btnStyle}>Add Section</button>
-      <button style={btnStyle}>Add Footer</button>
+      {/* Tabs */}
+      <SidebarTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+      
+      {/* Tab content */}
+      <SidebarContent activeTab={activeTab} />
     </aside>
   );
 }
