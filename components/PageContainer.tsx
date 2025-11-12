@@ -7,6 +7,7 @@ interface PageContainerProps {
   background: string;
   radius: number;
   padding: number;
+  opacity: number;
   selected: boolean;
   position: { x: number; y: number };
   setSelected: (v: boolean) => void;
@@ -19,6 +20,7 @@ export default function PageContainer({
   background,
   radius,
   padding,
+  opacity,
   selected,
   position,
   setSelected,
@@ -68,6 +70,7 @@ export default function PageContainer({
         justifyContent: "center",
         borderRadius: radius,
         padding,
+        opacity: opacity,
         border: selected ? "2px solid #007aff" : "",
         boxShadow: selected
           ? "0 0 0 4px rgba(0,122,255,0.15)"

@@ -1,6 +1,10 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import PageContainer from "./PageContainer";
+import Navbar from "../sections/NavBar";
+import HeroSection from "../sections/HeroSection";
+import FeaturesSection from "../sections/FeaturesSection";
+import FooterSection from "../sections/FooterSection";
 
 export default function Canvas({
   selected,
@@ -38,8 +42,8 @@ export default function Canvas({
     >
       <div
         style={{
-          width: 3000,
-          height: 3000,
+          width: 5000,
+          height: 5000,
           position: "relative",
           background: "#f8f8f8",
         }}
@@ -50,6 +54,7 @@ export default function Canvas({
           background={containerProps.background}
           radius={containerProps.radius}
           padding={containerProps.padding}
+          opacity={containerProps.opacity}
           selected={selected}
           position={position}
           setSelected={setSelected}

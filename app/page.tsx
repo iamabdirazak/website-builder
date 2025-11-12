@@ -4,6 +4,7 @@ import Toolbar from "../components/toolbar";
 import Sidebar from "../components/sidebar";
 import Inspector from "../components/inspector";
 import Canvas from "../components/canvas";
+import NavBar from "/Users/abdirazak/Developer/website-builder/sections/NavBar";
 
 export default function BuilderPage() {
   const [selected, setSelected] = useState(false);
