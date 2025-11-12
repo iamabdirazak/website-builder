@@ -7,8 +7,10 @@ interface PageContainerProps {
   background: string;
   radius: number;
   padding: number;
-  onSelect: () => void;
   selected: boolean;
+  position: { x: number; y: number };
+  setSelected: (v: boolean) => void;
+  setPosition: React.Dispatch<React.SetStateAction<{ x: number; y: number }>>;
 }
 
 export default function PageContainer({
@@ -17,34 +19,65 @@ export default function PageContainer({
   background,
   radius,
   padding,
-  onSelect,
   selected,
+  position,
+  setSelected,
+  setPosition,
 }: PageContainerProps) {
+  // Handles dragging when selected
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!selected) return;
+    e.stopPropagation();
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const initialX = position.x;
+    const initialY = position.y;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = moveEvent.clientX - startX;
+      const deltaY = moveEvent.clientY - startY;
+      setPosition({ x: initialX + deltaX, y: initialY + deltaY });
+    };
+
+    const handleMouseUp = () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  };
+
   return (
     <div
+      onMouseDown={handleMouseDown}
       onClick={(e) => {
-        e.stopPropagation(); // prevent canvas deselect
-        onSelect();
+        e.stopPropagation();
+        setSelected(true);
       }}
       style={{
         position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
+        top: position.y,
+        left: position.x,
         width,
         height,
         background,
-        borderRadius: radius,
-        padding,
-        border: selected ? "2px solid #007aff" : "1px solid #aaa",
-        boxShadow: selected ? "0 0 0 4px rgba(0,122,255,0.15)" : "0 2px 6px rgba(0,0,0,0.1)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        transition: "all 0.15s ease",
+        borderRadius: radius,
+        padding,
+        border: selected ? "2px solid #007aff" : "",
+        boxShadow: selected
+          ? "0 0 0 4px rgba(0,122,255,0.15)"
+          : "0 2px 6px rgba(0,0,0,0.05)",
+        cursor: selected ? "grab" : "pointer",
+        userSelect: "none",
+        transition: "background 0.15s ease",
       }}
     >
-      Page Layout Container
+      Canvas Area (Scroll & Drop Here)
     </div>
   );
 }
