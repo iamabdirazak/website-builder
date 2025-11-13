@@ -75,6 +75,7 @@ export default function BuilderPage() {
         canvasSections={canvasSections}
         setCanvasSections={setCanvasSections}
         pageLayout={pageLayout}
+        setPageLayout={setPageLayout}
       />
       <Canvas
         canvasProps={canvasProps}

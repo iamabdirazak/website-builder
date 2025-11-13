@@ -1,8 +1,6 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import PageContainer from "./PageContainer";
-import CanvasSectionItem from "./CanvasSectionItem";
-import { SECTION_TEMPLATES } from "./SectionTemplates";
 import { PageLayout, CanvasSection, SelectionData } from "/Users/abdirazak/Developer/website-builder/app/page";
 
 interface CanvasProps {
@@ -25,40 +23,17 @@ export default function Canvas({
   setSelection,
 }: CanvasProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
-  // Center view on load
+  // Center view on page layout on load
   useEffect(() => {
     const el = canvasRef.current;
     if (el) {
-      el.scrollTo(
-        el.scrollWidth / 2 - el.clientWidth / 2,
-        el.scrollHeight / 2 - el.clientHeight / 2
-      );
+      // Scroll to center the page layout
+      const scrollX = pageLayout.position.x - el.clientWidth / 2 + pageLayout.width / 2;
+      const scrollY = pageLayout.position.y - el.clientHeight / 2 + pageLayout.height / 2;
+      el.scrollTo(scrollX, scrollY);
     }
   }, []);
-
-  const handleCanvasDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const templateKey = e.dataTransfer.getData("template");
-    if (templateKey && canvasRef.current) {
-      const template = SECTION_TEMPLATES[templateKey as keyof typeof SECTION_TEMPLATES];
-      if (!template) return;
-
-      const rect = canvasRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left + canvasRef.current.scrollLeft - 150;
-      const y = e.clientY - rect.top + canvasRef.current.scrollTop - 100;
-
-      const newSection: CanvasSection = {
-        id: `section-${Date.now()}`,
-        type: template.type,
-        props: { ...template.props },
-        position: { x, y }
-      };
-
-      setCanvasSections(prev => [...prev, newSection]);
-    }
-  };
 
   const handleCanvasClick = () => {
     setSelection({ type: 'canvas', id: null });
@@ -68,8 +43,6 @@ export default function Canvas({
     <main
       ref={canvasRef}
       onClick={handleCanvasClick}
-      onDragOver={(e) => e.preventDefault()}
-      onDrop={handleCanvasDrop}
       style={{
         position: "absolute",
         top: 50,
@@ -92,22 +65,7 @@ export default function Canvas({
           backgroundSize: `${canvasProps.gridSize}px ${canvasProps.gridSize}px`,
         }}
       >
-        {/* Canvas Sections */}
-        {canvasSections.map((section) => (
-          <CanvasSectionItem
-            key={section.id}
-            section={section}
-            canvasSections={canvasSections}
-            setCanvasSections={setCanvasSections}
-            pageLayout={pageLayout}
-            setPageLayout={setPageLayout}
-            selection={selection}
-            setSelection={setSelection}
-            canvasRef={canvasRef}
-          />
-        ))}
-
-        {/* Page Container */}
+        {/* Page Container - Always visible and centered */}
         <PageContainer
           pageLayout={pageLayout}
           setPageLayout={setPageLayout}

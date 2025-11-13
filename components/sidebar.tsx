@@ -1,20 +1,33 @@
 "use client";
 import React, { useState } from "react";
 import { SECTION_TEMPLATES } from "./SectionTemplates";
-import { CanvasSection, PageLayout } from "/Users/abdirazak/Developer/website-builder/app/page";
+import { CanvasSection, PageLayout, SectionData } from "/Users/abdirazak/Developer/website-builder/app/page";
 
 interface SidebarProps {
   canvasSections: CanvasSection[];
   setCanvasSections: React.Dispatch<React.SetStateAction<CanvasSection[]>>;
   pageLayout: PageLayout;
+  setPageLayout: React.Dispatch<React.SetStateAction<PageLayout>>;
 }
 
-export default function Sidebar({ canvasSections, setCanvasSections, pageLayout }: SidebarProps) {
+export default function Sidebar({ canvasSections, setCanvasSections, pageLayout, setPageLayout }: SidebarProps) {
   const [activeTab, setActiveTab] = useState<"Components" | "Layers">("Components");
 
-  const handleDragStart = (e: React.DragEvent, templateKey: string) => {
-    e.dataTransfer.effectAllowed = "copy";
-    e.dataTransfer.setData("template", templateKey);
+  const handleAddSection = (templateKey: string) => {
+    const template = SECTION_TEMPLATES[templateKey as keyof typeof SECTION_TEMPLATES];
+    if (!template) return;
+
+    // Create new section and add directly to page layout
+    const newSection: SectionData = {
+      id: `section-${Date.now()}`,
+      type: template.type,
+      props: { ...template.props }
+    };
+
+    setPageLayout(prev => ({
+      ...prev,
+      sections: [...prev.sections, newSection]
+    }));
   };
 
   return (
@@ -52,7 +65,7 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout 
               padding: "12px 0",
               background: "transparent",
               border: "none",
-              borderBottom: activeTab === tab ? "2px solid #fff" : "2px solid transparent",
+              borderBottom: activeTab === tab ? "2px solid #007aff" : "2px solid transparent",
               color: activeTab === tab ? "#fff" : "rgba(255,255,255,0.5)",
               fontSize: 13,
               fontWeight: 500,
@@ -84,14 +97,13 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout 
             {Object.keys(SECTION_TEMPLATES).map((key) => (
               <div
                 key={key}
-                draggable
-                onDragStart={(e) => handleDragStart(e, key)}
+                onClick={() => handleAddSection(key)}
                 style={{
                   padding: 12,
                   background: "rgba(255,255,255,0.06)",
                   border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 20,
-                  cursor: "grab",
+                  borderRadius: 8,
+                  cursor: "pointer",
                   transition: "all 0.2s",
                   display: "flex",
                   alignItems: "center",
@@ -140,7 +152,7 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout 
               <div style={{
                 padding: 16,
                 background: "rgba(255,255,255,0.03)",
-                borderRadius: 15,
+                borderRadius: 6,
                 fontSize: 12,
                 color: "rgba(255,255,255,0.5)",
                 textAlign: "center",
@@ -153,9 +165,9 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout 
                   key={section.id}
                   style={{
                     padding: 10,
-                    background: "rgba(255,255,255,0.08)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    borderRadius: 20,
+                    background: "rgba(0,122,255,0.1)",
+                    border: "1px solid rgba(0,122,255,0.3)",
+                    borderRadius: 6,
                     fontSize: 12,
                     color: "rgba(255,255,255,0.9)",
                   }}
