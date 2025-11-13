@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { SectionData, CanvasSection } from "/Users/abdirazak/Developer/website-builder/app/page";
+import { SectionData, CanvasSection } from "../app/page";
 
 interface SectionRendererProps {
   section: SectionData | CanvasSection;

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import SectionRenderer from "./SectionRenderer";
-import { PageLayout, CanvasSection, SelectionData } from "/Users/abdirazak/Developer/website-builder/app/page";
+import { PageLayout, CanvasSection, SelectionData } from "../app/page";
 
 interface PageContainerProps {
   pageLayout: PageLayout;

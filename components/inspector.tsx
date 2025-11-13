@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { SelectionData, PageLayout, CanvasSection } from "/Users/abdirazak/Developer/website-builder/app/page";
+import { SelectionData, PageLayout, CanvasSection } from "../app/page";
 
 interface InspectorProps {
   selection: SelectionData;

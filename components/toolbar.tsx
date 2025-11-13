@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef } from "react";
-import { PageLayout, CanvasSection, SelectionData } from "/Users/abdirazak/Developer/website-builder/app/page";
+import { PageLayout, CanvasSection, SelectionData } from "../app/page";
 
 interface ToolbarProps {
   pageLayout: PageLayout;

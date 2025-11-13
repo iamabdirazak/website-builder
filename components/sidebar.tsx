@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { SECTION_TEMPLATES } from "./SectionTemplates";
-import { CanvasSection, PageLayout, SectionData } from "/Users/abdirazak/Developer/website-builder/app/page";
+import { CanvasSection, PageLayout, SectionData } from "../app/page";
 
 interface SidebarProps {
   canvasSections: CanvasSection[];

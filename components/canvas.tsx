@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useEffect } from "react";
 import PageContainer from "./PageContainer";
-import { PageLayout, CanvasSection, SelectionData } from "/Users/abdirazak/Developer/website-builder/app/page";
+import { PageLayout, CanvasSection, SelectionData } from "../app/page";
 
 interface CanvasProps {
   canvasProps: any;
