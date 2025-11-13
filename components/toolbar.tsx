@@ -1,7 +1,6 @@
 "use client";
 import React, { useRef } from "react";
 import { PageLayout, CanvasSection, SelectionData } from "/Users/abdirazak/Developer/website-builder/app/page";
-import exportIcon from '../export.svg';
 
 interface ToolbarProps {
   pageLayout: PageLayout;
@@ -93,7 +92,7 @@ export default function Toolbar({
           fontSize: 16,
           fontWeight: 600,
           color: "#fff",
-          padding: "10px 10px 10px 10px",
+          padding: "10px 15px 10px 15px",
         }}>
           <img
           src="../icon.png"
@@ -141,7 +140,7 @@ export default function Toolbar({
           alignItems: "center", 
           justifyContent: "flex-end", 
           gap: 10, 
-          padding: "10px 10px 10px 10px",
+          padding: "10px 15px 10px 15px",
           }}>
           <button
             onClick={() => fileInputRef.current?.click()}

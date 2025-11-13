@@ -192,7 +192,7 @@ export default function Inspector({
               marginBottom: 16,
               padding: 8,
               background: "rgba(255,255,255,0.08)",
-              borderRadius: 6,
+              borderRadius: 10,
             }}
           >
             Page Layout
@@ -317,8 +317,8 @@ export default function Inspector({
               color: "rgba(255,255,255,0.5)",
               marginBottom: 16,
               padding: 8,
-              background: "rgba(0,255,122,0.1)",
-              borderRadius: 6,
+              background: "rgba(255,255,255,0.1)",
+              borderRadius: 10,
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",

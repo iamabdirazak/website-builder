@@ -11,7 +11,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ canvasSections, setCanvasSections, pageLayout, setPageLayout }: SidebarProps) {
-  const [activeTab, setActiveTab] = useState<"Components" | "Layers">("Components");
+  const [activeTab, setActiveTab] = useState<"Library" | "Layers">("Library");
 
   const handleAddSection = (templateKey: string) => {
     const template = SECTION_TEMPLATES[templateKey as keyof typeof SECTION_TEMPLATES];
@@ -56,7 +56,7 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
           padding: "0 16px",
         }}
       >
-        {(["Components", "Layers"] as const).map((tab) => (
+        {(["Library", "Layers"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -65,7 +65,7 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
               padding: "12px 0",
               background: "transparent",
               border: "none",
-              borderBottom: activeTab === tab ? "2px solid #007aff" : "2px solid transparent",
+              borderBottom: activeTab === tab ? "2px solid #fff" : "2px solid transparent",
               color: activeTab === tab ? "#fff" : "rgba(255,255,255,0.5)",
               fontSize: 13,
               fontWeight: 500,
@@ -80,7 +80,7 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
 
       {/* Content */}
       <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
-        {activeTab === "Components" && (
+        {activeTab === "Library" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             <div
               style={{
@@ -92,7 +92,7 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
                 marginBottom: 4,
               }}
             >
-              Section Library
+              Sections
             </div>
             {Object.keys(SECTION_TEMPLATES).map((key) => (
               <div
@@ -102,20 +102,26 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
                   padding: 12,
                   background: "rgba(255,255,255,0.06)",
                   border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 8,
+                  borderRadius: 15,
                   cursor: "pointer",
                   transition: "all 0.2s",
                   display: "flex",
                   alignItems: "center",
-                  gap: 8,
+                  gap: 10,
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = "rgba(255,255,255,0.1)";
-                  e.currentTarget.style.borderColor = "rgba(0,122,255,0.4)";
+                  e.currentTarget.style.borderColor = "1px solid rgba(255,255,255,0.25)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = "rgba(255,255,255,0.06)";
                   e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.transform = "scale(0.97)";
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
                 }}
               >
                 <span style={{ fontSize: 18 }}>+</span>
@@ -152,7 +158,7 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
               <div style={{
                 padding: 16,
                 background: "rgba(255,255,255,0.03)",
-                borderRadius: 6,
+                borderRadius: 15,
                 fontSize: 12,
                 color: "rgba(255,255,255,0.5)",
                 textAlign: "center",
@@ -165,9 +171,9 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
                   key={section.id}
                   style={{
                     padding: 10,
-                    background: "rgba(0,122,255,0.1)",
-                    border: "1px solid rgba(0,122,255,0.3)",
-                    borderRadius: 6,
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    borderRadius: 15,
                     fontSize: 12,
                     color: "rgba(255,255,255,0.9)",
                   }}

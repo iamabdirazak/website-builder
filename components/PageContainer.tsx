@@ -21,24 +21,23 @@ export default function PageContainer({
   setCanvasSections,
 }: PageContainerProps) {
   const isSelected = selection.type === 'pageContainer';
-  const [isDragging, setIsDragging] = useState(false);
+  const [isDraggingContainer, setIsDraggingContainer] = useState(false);
   const [draggedSectionIndex, setDraggedSectionIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleContainerMouseDown = (e: React.MouseEvent) => {
     // Only allow dragging from the header area
     const target = e.target as HTMLElement;
     if (!target.closest('.page-header')) return;
     
     e.stopPropagation();
-    setSelection({ type: 'pageContainer', id: pageLayout.id });
 
     const startX = e.clientX;
     const startY = e.clientY;
     const initialX = pageLayout.position.x;
     const initialY = pageLayout.position.y;
 
-    setIsDragging(true);
+    setIsDraggingContainer(true);
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const deltaX = moveEvent.clientX - startX;
@@ -50,7 +49,7 @@ export default function PageContainer({
     };
 
     const handleMouseUp = () => {
-      setIsDragging(false);
+      setIsDraggingContainer(false);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
@@ -60,8 +59,11 @@ export default function PageContainer({
   };
 
   const handleContainerClick = (e: React.MouseEvent) => {
-    // Only select container if clicking on empty area
-    if (e.target === e.currentTarget) {
+    // Select container when clicking on it (but not when clicking sections inside)
+    const target = e.target as HTMLElement;
+    
+    // Check if click is on the container itself or empty area
+    if (e.currentTarget === target || target.closest('.empty-drop-zone') || target.closest('.page-header')) {
       e.stopPropagation();
       setSelection({ type: 'pageContainer', id: pageLayout.id });
     }
@@ -127,7 +129,7 @@ export default function PageContainer({
     <div
       onClick={handleContainerClick}
       style={{
-        position: "absolute",
+        position: "relative",
         top: pageLayout.position.y,
         left: pageLayout.position.x,
         width: pageLayout.width,
@@ -136,35 +138,39 @@ export default function PageContainer({
         borderRadius: pageLayout.radius,
         padding: 0,
         opacity: pageLayout.opacity,
-        border: isSelected ? "2px solid #007aff" : "1px solid rgba(255,255,255,0.2)",
+        border: isSelected ? "1px solid rgba(25,25,25,0.75)" : "1px solid rgba(25,25,25,0.2)",
         boxShadow: isSelected
-          ? "0 0 0 4px rgba(0,122,255,0.15), 0 8px 32px rgba(0,0,0,0.4)"
+          ? "0 0 0 4px rgba(225,225,255,0.15), 0 8px 32px rgba(0,0,0,0.4)"
           : "0 8px 32px rgba(0,0,0,0.3)",
         cursor: "default",
         userSelect: "none",
-        overflow: "hidden",
+        overflow: "visible",
       }}
     >
       {/* Page Header - Draggable */}
       <div
         className="page-header"
-        onMouseDown={handleMouseDown}
+        onMouseDown={handleContainerMouseDown}
         style={{
-          background: "rgba(0,0,0,0.8)",
+          position: "absolute",       // absolute positioning
+          top: -60,                    // height of the header or desired offset
+          left: 0,
+          width: "100%",               // full width of container
+          background: isSelected ? "rgba(25,25,27,1)" : "rgba(25,25,27,0.8)",
           padding: "12px 16px",
-          borderBottom: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: 15,
+          border: isSelected ? "1px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.1)",
           fontSize: 13,
           fontWeight: 600,
           color: "#fff",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          cursor: isDragging ? "grabbing" : "grab",
+          cursor: isDraggingContainer ? "grabbing" : "grab",
           userSelect: "none",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 16 }}>☰</span>
           <span>{pageLayout.name}</span>
         </div>
         <span style={{ fontSize: 11, opacity: 0.6 }}>
@@ -173,10 +179,12 @@ export default function PageContainer({
       </div>
 
       {/* Page Content Area */}
-      <div style={{ padding: pageLayout.padding }}>
+      <div style={{ padding: 0 }}>
         {pageLayout.sections.length === 0 ? (
           <div
+            className="empty-drop-zone"
             style={{
+              height: "100%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -184,14 +192,11 @@ export default function PageContainer({
               color: "#999",
               fontSize: 14,
               flexDirection: "column",
-              gap: 12,
-              background: "rgba(0,0,0,0.02)",
-              borderRadius: 8,
-              border: "2px dashed rgba(0,0,0,0.1)",
+              gap: 0,
             }}
           >
             <div style={{ fontSize: 48, opacity: 0.3 }}>📄</div>
-            <div style={{ fontWeight: 600 }}>Click to add sections</div>
+            <div style={{ fontWeight: 600 }}>Add sections</div>
             <div style={{ fontSize: 12, opacity: 0.6 }}>
               Click components from the sidebar to add them here
             </div>
@@ -215,9 +220,9 @@ export default function PageContainer({
                   position: "relative",
                   marginBottom: 0,
                   border: isSectionSelected
-                    ? "2px solid #007aff"
+                    ? "1px solid rgba(255,255,255,0.75)"
                     : isDragOver
-                    ? "2px solid #00ff88"
+                    ? "2px solid #ffff"
                     : "2px solid transparent",
                   borderRadius: 4,
                   transition: "border 0.15s",
@@ -230,26 +235,35 @@ export default function PageContainer({
                   className="section-controls"
                   style={{
                     position: "absolute",
-                    top: 8,
-                    right: 8,
                     display: isSectionSelected ? "flex" : "none",
                     gap: 4,
                     zIndex: 10,
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: 25,
+                    width: "100%",
+                    height: "100%",
+                    overflow: "visible",
+
                   }}
                 >
                   <div
                     style={{
-                      background: "rgba(0,122,255,0.9)",
+                      position: "absolute",
+                      left: -70,
+                      alignContent: "end",
+                      background: "rgba(255,255,255,0.9)",
                       border: "none",
-                      borderRadius: 4,
-                      padding: "4px 8px",
-                      color: "#fff",
-                      fontSize: 11,
+                      borderRadius: 10,
+                      padding: "4px 8px 4px 8px",
+                      color: "#000",
+                      fontSize: 13,
                       fontWeight: 600,
                       cursor: "grab",
+                      
                     }}
                   >
-                    ⠿ Drag to reorder
+                    Reorder
                   </div>
                   <button
                     onClick={(e) => {
@@ -257,16 +271,19 @@ export default function PageContainer({
                       deleteSection(section.id);
                     }}
                     style={{
+                      position: "absolute",
+                      right: -60,
                       background: "rgba(255,59,48,0.9)",
                       border: "none",
-                      borderRadius: 4,
-                      padding: "4px 8px",
+                      borderRadius: 10,
+                      padding: "4px 8px 4px 8px",
                       color: "#fff",
-                      fontSize: 12,
+                      fontSize: 13,
+                      fontWeight: 600,
                       cursor: "pointer",
                     }}
                   >
-                    🗑️
+                    Delete
                   </button>
                 </div>
                 <SectionRenderer section={section} />

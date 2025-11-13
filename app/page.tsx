@@ -47,7 +47,7 @@ export default function BuilderPage() {
     name: 'Untitled Page',
     width: 800,
     height: 600,
-    background: "#ffffff",
+    background: "rgba(25,25,25,0.8)",
     radius: 0,
     padding: 16,
     opacity: 1,

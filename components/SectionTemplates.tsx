@@ -3,14 +3,15 @@ export const SECTION_TEMPLATES = {
     type: 'header',
     props: {
       title: 'iKreatify',
-      logo: 'https://via.placeholder.com/150x50',
-      navigation: ['Home', 'About', 'Services', 'Contact']
+      logo: "../icon.png",
+      navigation: ['About', 'Products', 'Services', 'Support'],
+      button: 'Get Started',
     }
   },
   hero: {
     type: 'hero',
     props: {
-      title: 'Welcome to Our Site',
+      title: 'Welcome to iKreatify',
       subtitle: 'Build something amazing today',
       backgroundImage: 'https://via.placeholder.com/1200x600',
       ctaText: 'Get Started',
