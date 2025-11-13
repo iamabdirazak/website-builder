@@ -1,10 +1,6 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import PageContainer from "./PageContainer";
-import Navbar from "../sections/NavBar";
-import HeroSection from "../sections/HeroSection";
-import FeaturesSection from "../sections/FeaturesSection";
-import FooterSection from "../sections/FooterSection";
 
 export default function Canvas({
   selected,
@@ -32,12 +28,12 @@ export default function Canvas({
       onClick={() => setSelected(false)}
       style={{
         position: "absolute",
-        top: 50,
+        top: 0,
         left: 0,
         right: 0,
         bottom: 0,
         overflow: "scroll",
-        background: "#f1f3f5",
+        background: "#242424",
       }}
     >
       <div
@@ -45,7 +41,7 @@ export default function Canvas({
           width: 5000,
           height: 5000,
           position: "relative",
-          background: "#f8f8f8",
+          background: "#242424",
         }}
       >
         <PageContainer

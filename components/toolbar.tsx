@@ -6,9 +6,9 @@ export default function Toolbar() {
     <header
       style={{
         height: 50,
-        background: "rgba(255,255,255,0.75)",
-        backdropFilter: "blur(20px) saturate(180%)",
-        borderBottom: "1px solid #ddd",
+        background: "rgba(25,25,27,0.75)",
+        backdropFilter: "blur(25px) saturate(180%)",
+        borderBottom: "1px solid rgba(255,255,255,0.08)",
         display: "flex",
         alignItems: "center",
         padding: "0 16px",
@@ -20,7 +20,7 @@ export default function Toolbar() {
         right: 0,
       }}
     >
-      <img src="/icon.png" alt="iKreatify Logo" style={{ height: 25, width: "auto", marginRight: 8 }} />
+      <img src="/icon.png" alt="iKreatify Logo" style={{ height: 25, width: "auto", marginRight: 8}} />
       iKreatify
     </header>
   );
