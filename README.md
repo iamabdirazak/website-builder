@@ -413,9 +413,8 @@ This project demonstrates proficiency in:
 ---
 ## ✍️ Author
 
-### Abdirazak Mubarak
-Founder, Developer & Designer of iKreatify￼
-Building intuitive, Apple-inspired software experiences that merge creativity, simplicity, and intelligence.
+Abdirazak Mubarak
 
-📍 Riyadh, Saudi Arabia
-🗓️ Last Updated: November 13, 2025
+---
+## 🗓️ Date
+ November 13, 2025
