@@ -97,7 +97,7 @@ export default function Toolbar({
           <img
           src="../icon.png"
           alt="Logo"
-          style={{ height: 24 }}
+          style={{ height: 24, width: "auto" }}
         />
         <span>iKreatify</span>
         </div>
