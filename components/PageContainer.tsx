@@ -107,12 +107,27 @@ export default function PageContainer({
     e.stopPropagation();
     setDraggedSectionIndex(index);
     e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', index.toString());
   };
 
   const handleSectionDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    if (draggedSectionIndex === null) return;
+    if (draggedSectionIndex === index) return;
+    
     e.dataTransfer.dropEffect = 'move';
+    setDragOverIndex(index);
+  };
+
+  const handleSectionDragEnter = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (draggedSectionIndex === null) return;
+    if (draggedSectionIndex === index) return;
+    
     setDragOverIndex(index);
   };
 
@@ -120,12 +135,18 @@ export default function PageContainer({
     e.preventDefault();
     e.stopPropagation();
     
-    if (draggedSectionIndex === null || draggedSectionIndex === dropIndex) {
+    if (draggedSectionIndex === null) {
+      setDragOverIndex(null);
+      return;
+    }
+    
+    if (draggedSectionIndex === dropIndex) {
       setDraggedSectionIndex(null);
       setDragOverIndex(null);
       return;
     }
 
+    // Perform the reorder
     setPageLayout(prev => {
       const newSections = [...prev.sections];
       const [draggedSection] = newSections.splice(draggedSectionIndex, 1);
@@ -137,7 +158,8 @@ export default function PageContainer({
     setDragOverIndex(null);
   };
 
-  const handleSectionDragEnd = () => {
+  const handleSectionDragEnd = (e: React.DragEvent) => {
+    e.preventDefault();
     setDraggedSectionIndex(null);
     setDragOverIndex(null);
   };
@@ -155,9 +177,9 @@ export default function PageContainer({
         borderRadius: pageLayout.radius,
         padding: 0,
         opacity: pageLayout.opacity,
-        border: isPageSelected ? "2px solid #007aff" : "1px solid rgba(255,255,255,0.2)",
+        border: isPageSelected ? "2px solid #fff" : "1px solid rgba(255,255,255,0.2)",
         boxShadow: isPageSelected
-          ? "0 0 0 4px rgba(0,122,255,0.15), 0 8px 32px rgba(0,0,0,0.4)"
+          ? "0 0 0 4px rgba(255,255,255,0.15), 0 8px 32px rgba(0,0,0,0.4)"
           : "0 8px 32px rgba(0,0,0,0.3)",
         cursor: "default",
         userSelect: "none",
@@ -219,25 +241,33 @@ export default function PageContainer({
         ) : (
           pageLayout.sections.map((section, index) => {
             const isSectionSelected = selection.type === 'section' && selection.id === section.id;
-            const isDragOver = dragOverIndex === index;
+            const isDragOver = dragOverIndex === index && draggedSectionIndex !== index;
+            const isDragging = draggedSectionIndex === index;
             
             return (
               <div
                 key={section.id}
+                draggable={!isMobile}
+                onDragStart={(e) => !isMobile && handleSectionDragStart(e, index)}
+                onDragOver={(e) => !isMobile && handleSectionDragOver(e, index)}
+                onDragEnter={(e) => !isMobile && handleSectionDragEnter(e, index)}
+                onDrop={(e) => !isMobile && handleSectionDrop(e, index)}
+                onDragEnd={(e) => !isMobile && handleSectionDragEnd(e)}
                 onClick={(e) => handleSectionClick(e, section.id, section.type)}
                 className="page-section"
                 style={{
                   position: "relative",
                   marginBottom: 0,
                   border: isSectionSelected
-                    ? "2px solid #007aff"
+                    ? "1px solid #ffff"
                     : isDragOver
-                    ? "2px solid #00ff88"
+                    ? "2px solid #ffff"
                     : "2px solid transparent",
                   borderRadius: 4,
-                  transition: "border 0.15s",
-                  cursor: "pointer",
-                  opacity: draggedSectionIndex === index ? 0.5 : 1,
+                  transition: isDragging ? "none" : "border 0.15s, opacity 0.15s",
+                  cursor: isMobile ? "pointer" : "move",
+                  opacity: isDragging ? 0.4 : 1,
+                  background: isDragOver ? "rgba(0,255,136,0.05)" : "transparent",
                 }}
               >
                 {/* Section Controls - Show when section is selected */}
@@ -246,15 +276,12 @@ export default function PageContainer({
                     className="section-controls"
                     style={{
                       position: "absolute",
-                      top: 8,
-                      right: 8,
                       display: "flex",
                       gap: 4,
                       zIndex: 10,
-                      background: "rgba(0,122,255,0.95)",
-                      padding: "4px",
-                      borderRadius: 6,
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.2)"
+                      justifyContent: "space-between",
+                      width: "100%",
+                      height: "100%",
                     }}
                   >
                     {isMobile ? (
@@ -302,27 +329,22 @@ export default function PageContainer({
                       </>
                     ) : (
                       <div
-                        draggable
-                        onDragStart={(e) => handleSectionDragStart(e, index)}
-                        onDragOver={(e) => handleSectionDragOver(e, index)}
-                        onDrop={(e) => handleSectionDrop(e, index)}
-                        onDragEnd={handleSectionDragEnd}
-                        onClick={(e) => e.stopPropagation()}
                         style={{
                           display: "flex",
                           alignItems: "center",
                           gap: 6,
-                          cursor: "grab",
                           color: "#fff",
                           fontSize: 11,
                           fontWeight: 600,
                           padding: "4px 8px",
-                          background: "rgba(255,255,255,0.1)",
-                          borderRadius: 4
+                          background: "rgba(25,25,27,0.75)",
+                          backdropFilter: "blur(25px) saturate(180%)",
+                          borderRight: "1px solid rgba(255,255,255,0.08)",
+                          cursor: "grab",
+                          userSelect: "none"
                         }}
                       >
-                        <span>⠿</span>
-                        <span>Drag</span>
+                        <img src="/lines.png" style={{ width: 20, height: 15 }} />
                       </div>
                     )}
                     <button
@@ -331,7 +353,6 @@ export default function PageContainer({
                         deleteSection(section.id);
                       }}
                       style={{
-                        background: "rgba(255,59,48,0.95)",
                         border: "none",
                         borderRadius: 4,
                         padding: "6px 10px",
@@ -339,9 +360,12 @@ export default function PageContainer({
                         fontSize: 11,
                         cursor: "pointer",
                         fontWeight: 600,
+                        background: "rgba(25,25,27,0.75)",
+                        backdropFilter: "blur(25px) saturate(180%)",
+                        borderLeft: "1px solid rgba(255,255,255,0.08)",
                       }}
                     >
-                      🗑️
+                      <img src="/delete.png" style={{ width: "auto", height: 23 }} />
                     </button>
                   </div>
                 )}

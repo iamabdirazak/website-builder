@@ -34,10 +34,10 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
     <aside
       style={{
         position: "fixed",
-        top: 50,
+        top: 60,
         left: 0,
         width: 300,
-        height: "calc(100vh - 50px)",
+        height: "calc(100vh - 60px)",
         background: "rgba(25,25,27,0.75)",
         backdropFilter: "blur(25px) saturate(180%)",
         WebkitBackdropFilter: "blur(20px) saturate(180%)",

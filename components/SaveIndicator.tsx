@@ -50,7 +50,6 @@ export default function SaveIndicator({ lastSaved, isSaving }: SaveIndicatorProp
           background: '#ffa500',
           animation: 'pulse 1.5s ease-in-out infinite'
         }} />
-        Saving...
         <style jsx>{`
           @keyframes pulse {
             0%, 100% { opacity: 1; }
@@ -71,8 +70,13 @@ export default function SaveIndicator({ lastSaved, isSaving }: SaveIndicatorProp
         alignItems: 'center',
         gap: 6
       }}>
-        <span style={{ color: '#00ff88', fontSize: 12 }}>✓</span>
-        Saved {timeAgo}
+        <span style={{ 
+          width: 8, 
+          height: 8, 
+          borderRadius: '50%', 
+          background: '#34c759',
+        }}
+        />
       </div>
     );
   }

@@ -97,10 +97,10 @@ export default function Inspector({
     <aside
       style={{
         position: "fixed",
-        top: 50,
+        top: 60,
         right: 0,
         width: 300,
-        height: "calc(100vh - 50px)",
+        height: "calc(100vh - 60px)",
         background: "rgba(25,25,27,0.75)",
         backdropFilter: "blur(25px) saturate(180%)",
         borderLeft: "1px solid rgba(255,255,255,0.08)",

@@ -91,15 +91,14 @@ export default function Toolbar({
           top: 0,
           left: 0,
           right: 0,
-          height: 50,
-          background: "rgba(18,18,20,0.85)",
+          height: 60,
+          background: "rgba(25,25,27,0.75)",
           backdropFilter: "blur(25px) saturate(180%)",
           borderBottom: "1px solid rgba(255,255,255,0.08)",
           zIndex: 30,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: isMobile ? "0 12px" : "0 16px",
         }}
       >
         {/* Left side */}
@@ -127,39 +126,148 @@ export default function Toolbar({
           )}
 
           {!isMobile && (
-            <input
-              type="text"
-              value={pageLayout.name}
-              onChange={(e) => setPageLayout(prev => ({ ...prev, name: e.target.value }))}
-              style={{
-                background: "transparent",
-                border: "none",
-                outline: "none",
-                color: "#fff",
-                fontSize: 14,
-                fontWeight: 600,
-                padding: "6px 8px",
-                borderRadius: 6,
-                minWidth: 150,
-              }}
-              onFocus={(e) => e.target.style.background = "rgba(255,255,255,0.06)"}
-              onBlur={(e) => e.target.style.background = "transparent"}
+            <div style={{
+          height: "100%",
+          width: "300px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8,
+          fontSize: 16,
+          fontWeight: 600,
+          color: "#fff",
+          padding: "10px 15px 10px 15px",
+        }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <img
+              src="../icon.png"
+              alt="Logo"
+              style={{ height: 24, width: "auto" }}
             />
+            <span>iKreatify</span>
+          </div>
+          <div style={{
+              color: "#f0f0f0",
+              fontSize: 12,
+              fontWeight: 500,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+          }}>
+            {/* <img src="/sidebarLeft.png" style={{ width: "auto", height: 20 }} /> */}
+          </div>
+        </div>
           )}
         </div>
 
-        {/* Center - Save indicator */}
-        {lastSaved !== undefined && (
-          <SaveIndicator lastSaved={lastSaved} isSaving={isSaving || false} />
-        )}
+        {/* Center - Input + Save indicator */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between", // centers the whole group
+            gap: 12,                   // space between input and indicator
+            flexGrow: 1,
+            padding: "0 15px",
+          }}
+        >
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              borderRadius: 6,
+              color: "#f0f0f0",
+              fontSize: 12,
+              fontWeight: 500,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <img src="/import.png" style={{ width: "auto", height: 23 }} />
+            Import
+          </button>
+
+          <div
+  style={{
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexGrow: 1,
+  }}
+>
+  {/* Input */}
+  <input
+    type="text"
+    value={pageLayout.name}
+    onChange={(e) =>
+      setPageLayout((prev) => ({ ...prev, name: e.target.value }))
+    }
+    style={{
+      background: "transparent",
+      border: "1px solid rgba(255,255,255,0.12)",
+      outline: "none",
+      color: "#fff",
+      fontSize: 14,
+      fontWeight: 600,
+      padding: "6px 8px",
+      borderRadius: 15,
+      minWidth: 150,
+      textAlign: "center",
+    }}
+    onFocus={(e) =>
+      (e.target.style.background = "rgba(255,255,255,0.06)")
+    }
+    onBlur={(e) => (e.target.style.background = "transparent")}
+  />
+
+  {/* Absolute indicator - doesn't push anything */}
+  {lastSaved !== undefined && (
+    <div
+      style={{
+        position: "absolute",
+        left: "59%",       // adjust as needed
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <SaveIndicator lastSaved={lastSaved} isSaving={isSaving || false} />
+    </div>
+  )}
+</div>
+
+          <button
+            onClick={exportJSON}
+            disabled={!isExportEnabled}
+            style={{
+              color: "#f0f0f0",
+              fontSize: 12,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <img src="/export.png" style={{ width: "auto", height: 23 }} />
+            Export
+          </button>
+
+        </div>
+        
 
         {/* Right side */}
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", height: "100%", width: "300px" , justifyContent: "flex-end", padding: "0 15px" }}>
           {(onToggleInspector || isMobile) && (
             <button
               onClick={onToggleInspector}
               style={{
-                background: "rgba(255,255,255,0.08)",
                 border: "1px solid rgba(255,255,255,0.12)",
                 borderRadius: 6,
                 padding: "6px 10px",
@@ -176,52 +284,7 @@ export default function Toolbar({
             </button>
           )}
 
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            style={{
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              borderRadius: 6,
-              padding: isMobile ? "6px 10px" : "6px 12px",
-              color: "#fff",
-              fontSize: 13,
-              fontWeight: 500,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
-            onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
-          >
-            <span>↑</span> {!isMobile && "Import"}
-          </button>
-          <button
-            onClick={exportJSON}
-            disabled={!isExportEnabled}
-            style={{
-              background: isExportEnabled ? "#007aff" : "rgba(255,255,255,0.08)",
-              border: isExportEnabled ? "1px solid rgba(0,122,255,0.3)" : "1px solid rgba(255,255,255,0.12)",
-              borderRadius: 6,
-              padding: isMobile ? "6px 10px" : "6px 12px",
-              color: isExportEnabled ? "#fff" : "rgba(255,255,255,0.4)",
-              fontSize: 13,
-              fontWeight: 500,
-              cursor: isExportEnabled ? "pointer" : "not-allowed",
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              opacity: isExportEnabled ? 1 : 0.5,
-            }}
-            onMouseEnter={(e) => {
-              if (isExportEnabled) e.currentTarget.style.background = "#0066dd";
-            }}
-            onMouseLeave={(e) => {
-              if (isExportEnabled) e.currentTarget.style.background = "#007aff";
-            }}
-          >
-            <span>↓</span> {!isMobile && "Export"}
-          </button>
+          {/* <img src="/sidebarRight.png" style={{ width: "auto", height: 20 }} /> */}
         </div>
       </div>
       <input
