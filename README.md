@@ -3,6 +3,8 @@
 iKreatify Builder (build.ikreatify.com) is a visual web-building environment designed to simulate a professional design tool experience.
 A browser-based website builder built with **Next.js 14**, **TypeScript**, and **React 18**. This application provides an intuitive drag-and-drop interface for creating, editing, and exporting web page layouts with real-time visual feedback.
 
+![Mockup](../app/Builder-Mockup.png)
+
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
 ![Next.js](https://img.shields.io/badge/Next.js-14-black)
