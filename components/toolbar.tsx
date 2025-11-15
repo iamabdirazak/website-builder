@@ -138,7 +138,7 @@ export default function Toolbar({
           width: "300px",
           display: "flex", 
           alignItems: "center", 
-          justifyContent: "flex-end", 
+          justifyContent: "space-between", 
           gap: 10, 
           padding: "10px 15px 10px 15px",
           }}>
