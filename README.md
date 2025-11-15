@@ -6,11 +6,6 @@ A browser-based website builder built with **Next.js 14**, **TypeScript**, and *
 <img width="4486" height="2708" alt="Builder-Mockup" src="https://github.com/user-attachments/assets/08ea4418-99a6-492d-bceb-88ebbfcf7206" />
 
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
-![Next.js](https://img.shields.io/badge/Next.js-14-black)
-![React](https://img.shields.io/badge/React-18-61dafb)
-
 ---
 
 ## 🎯 Core Features
@@ -71,6 +66,12 @@ Property changes reflect immediately in the live preview with smooth transitions
 - **Styling**: Inline CSS-in-JS with TypeScript type safety
 - **State Management**: React useState with immutable update patterns
 - **Drag & Drop**: Native HTML5 Drag and Drop API
+
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
+![Next.js](https://img.shields.io/badge/Next.js-14-black)
+![React](https://img.shields.io/badge/React-18-61dafb)
+
+---
 
 ### **Project Structure**
 ```
