@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef } from "react";
 import { PageLayout, CanvasSection, SelectionData } from "../app/page";
+import SaveIndicator from "../components/SaveIndicator";
 
 interface ToolbarProps {
   pageLayout: PageLayout;
@@ -8,6 +9,12 @@ interface ToolbarProps {
   setPageLayout: React.Dispatch<React.SetStateAction<PageLayout>>;
   setCanvasSections: React.Dispatch<React.SetStateAction<CanvasSection[]>>;
   setSelection: React.Dispatch<React.SetStateAction<SelectionData>>;
+  selection: SelectionData;
+  lastSaved?: string | null;
+  isSaving?: boolean;
+  isMobile?: boolean;
+  onToggleSidebar?: () => void;
+  onToggleInspector?: () => void;
 }
 
 export default function Toolbar({
@@ -15,11 +22,22 @@ export default function Toolbar({
   canvasSections,
   setPageLayout,
   setCanvasSections,
-  setSelection
+  setSelection,
+  selection,
+  lastSaved,
+  isSaving,
+  isMobile,
+  onToggleSidebar,
+  onToggleInspector
 }: ToolbarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const exportJSON = () => {
+    if (selection.type !== 'pageContainer') {
+      alert('Please select the page container first (click on the page or its header)');
+      return;
+    }
+
     try {
       const exportData = {
         pageLayout,
@@ -63,6 +81,8 @@ export default function Toolbar({
     }
   };
 
+  const isExportEnabled = selection.type === 'pageContainer';
+
   return (
     <>
       <div
@@ -72,86 +92,100 @@ export default function Toolbar({
           left: 0,
           right: 0,
           height: 50,
-          background: "rgba(25,25,27,0.75)",
+          background: "rgba(18,18,20,0.85)",
           backdropFilter: "blur(25px) saturate(180%)",
           borderBottom: "1px solid rgba(255,255,255,0.08)",
           zIndex: 30,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          padding: isMobile ? "0 12px" : "0 16px",
         }}
       >
-        {/* Left Section */}
-        <div style={{
-          height: "100%",
-          width: "300px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          gap: 8,
-          fontSize: 16,
-          fontWeight: 600,
-          color: "#fff",
-          padding: "10px 15px 10px 15px",
-        }}>
-          <img
-          src="../icon.png"
-          alt="Logo"
-          style={{ height: 24, width: "auto" }}
-        />
-        <span>iKreatify</span>
+        {/* Left side */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          {/* Tablet/Mobile panel toggles */}
+          {(onToggleSidebar || isMobile) && (
+            <button
+              onClick={onToggleSidebar}
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                borderRadius: 6,
+                padding: "6px 10px",
+                color: "#fff",
+                fontSize: 13,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 4
+              }}
+            >
+              <span style={{ fontSize: 16 }}>☰</span>
+              {!isMobile && <span>Components</span>}
+            </button>
+          )}
+
+          {!isMobile && (
+            <input
+              type="text"
+              value={pageLayout.name}
+              onChange={(e) => setPageLayout(prev => ({ ...prev, name: e.target.value }))}
+              style={{
+                background: "transparent",
+                border: "none",
+                outline: "none",
+                color: "#fff",
+                fontSize: 14,
+                fontWeight: 600,
+                padding: "6px 8px",
+                borderRadius: 6,
+                minWidth: 150,
+              }}
+              onFocus={(e) => e.target.style.background = "rgba(255,255,255,0.06)"}
+              onBlur={(e) => e.target.style.background = "transparent"}
+            />
+          )}
         </div>
 
-        {/* Center Section */}
-        <div style={{ 
-          height: "100%",
-          width: "auto",
-          display: "flex", 
-          alignItems: "center", 
-          justifyContent: "center", 
-          gap: 12, 
-          }}>
-          <input
-            type="text"
-            value={pageLayout.name}
-            onChange={(e) => setPageLayout(prev => ({ ...prev, name: e.target.value }))}
-            style={{
-              background: "transparent",
-              border: "1px solid rgba(255,255,255,0.12)",
-              outline: "none",
-              color: "#fff",
-              fontSize: 14,
-              fontWeight: 600,
-              textAlign: "center",
-              padding: "6px 8px",
-              borderRadius: 15,
-              minWidth: 150,
-            }}
-            onFocus={(e) => e.target.style.background = "rgba(255,255,255,0.06)"}
-            onBlur={(e) => e.target.style.background = "transparent"}
-          />
-        </div>
-        
-        {/* Right Section */}
-        <div style={{
-          height: "100%",
-          width: "300px",
-          display: "flex", 
-          alignItems: "center", 
-          justifyContent: "space-between", 
-          gap: 10, 
-          padding: "10px 15px 10px 15px",
-          }}>
+        {/* Center - Save indicator */}
+        {lastSaved !== undefined && (
+          <SaveIndicator lastSaved={lastSaved} isSaving={isSaving || false} />
+        )}
+
+        {/* Right side */}
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          {(onToggleInspector || isMobile) && (
+            <button
+              onClick={onToggleInspector}
+              style={{
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.12)",
+                borderRadius: 6,
+                padding: "6px 10px",
+                color: "#fff",
+                fontSize: 13,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 4
+              }}
+            >
+              <span style={{ fontSize: 16 }}>⚙</span>
+              {!isMobile && <span>Properties</span>}
+            </button>
+          )}
+
           <button
             onClick={() => fileInputRef.current?.click()}
             style={{
               background: "rgba(255,255,255,0.08)",
               border: "1px solid rgba(255,255,255,0.12)",
-              borderRadius: 15,
-              padding: "6px 12px",
+              borderRadius: 6,
+              padding: isMobile ? "6px 10px" : "6px 12px",
               color: "#fff",
               fontSize: 13,
-              fontWeight: 650,
+              fontWeight: 500,
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
@@ -160,28 +194,33 @@ export default function Toolbar({
             onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
             onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
           >
-            Import
+            <span>↑</span> {!isMobile && "Import"}
           </button>
-
           <button
             onClick={exportJSON}
+            disabled={!isExportEnabled}
             style={{
-              background: "rgba(255,255,255,1)",
-              border: "1px solid rgba(225,225,255,0.3)",
-              borderRadius: 15,
-              padding: "6px 12px",
-              color: "#000",
+              background: isExportEnabled ? "#007aff" : "rgba(255,255,255,0.08)",
+              border: isExportEnabled ? "1px solid rgba(0,122,255,0.3)" : "1px solid rgba(255,255,255,0.12)",
+              borderRadius: 6,
+              padding: isMobile ? "6px 10px" : "6px 12px",
+              color: isExportEnabled ? "#fff" : "rgba(255,255,255,0.4)",
               fontSize: 13,
-              fontWeight: 750,
-              cursor: "pointer",
+              fontWeight: 500,
+              cursor: isExportEnabled ? "pointer" : "not-allowed",
               display: "flex",
               alignItems: "center",
               gap: 6,
+              opacity: isExportEnabled ? 1 : 0.5,
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.85)"}
-            onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,1)"}
+            onMouseEnter={(e) => {
+              if (isExportEnabled) e.currentTarget.style.background = "#0066dd";
+            }}
+            onMouseLeave={(e) => {
+              if (isExportEnabled) e.currentTarget.style.background = "#007aff";
+            }}
           >
-             Export
+            <span>↓</span> {!isMobile && "Export"}
           </button>
         </div>
       </div>

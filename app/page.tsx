@@ -1,9 +1,15 @@
-"use client";
-import React, { useState } from "react";
-import Toolbar from "../components/toolbar";
-import Sidebar from "../components/sidebar";
-import Inspector from "../components/inspector";
-import Canvas from "../components/canvas";
+// app/page.tsx - SERVER COMPONENT (No 'use client')
+import { Metadata } from 'next';
+import BuilderApp from '../components/BuilderApp';
+
+export const metadata: Metadata = {
+  title: 'Website Builder - Visual Page Construction Tool',
+  description: 'Professional-grade, browser-based website builder with drag-and-drop interface',
+  keywords: ['website builder', 'page builder', 'visual editor', 'drag and drop'],
+};
+
+// Type definitions (shared)
+export type ElementType = 'text' | 'rectangle' | 'image' | 'container';
 
 export interface SectionData {
   id: string;
@@ -35,66 +41,7 @@ export interface SelectionData {
   sectionId?: string;
 }
 
-export default function BuilderPage() {
-  const [canvasProps, setCanvasProps] = useState({
-    background: "#242424",
-    gridSize: 20,
-    showGrid: true,
-  });
-
-  const [pageLayout, setPageLayout] = useState<PageLayout>({
-    id: 'page-1',
-    name: 'Untitled Page',
-    width: 800,
-    height: 600,
-    background: "rgba(25,25,25,0.8)",
-    radius: 0,
-    padding: 16,
-    opacity: 1,
-    position: { x: 1500, y: 1000 },
-    sections: []
-  });
-
-  const [canvasSections, setCanvasSections] = useState<CanvasSection[]>([]);
-  
-  const [selection, setSelection] = useState<SelectionData>({
-    type: 'canvas',
-    id: null
-  });
-
-  return (
-    <div style={{ height: "100vh", width: "100vw", position: "relative", overflow: "hidden" }}>
-      <Toolbar 
-        pageLayout={pageLayout}
-        canvasSections={canvasSections}
-        setPageLayout={setPageLayout}
-        setCanvasSections={setCanvasSections}
-        setSelection={setSelection}
-      />
-      <Sidebar 
-        canvasSections={canvasSections}
-        setCanvasSections={setCanvasSections}
-        pageLayout={pageLayout}
-        setPageLayout={setPageLayout}
-      />
-      <Canvas
-        canvasProps={canvasProps}
-        pageLayout={pageLayout}
-        setPageLayout={setPageLayout}
-        canvasSections={canvasSections}
-        setCanvasSections={setCanvasSections}
-        selection={selection}
-        setSelection={setSelection}
-      />
-      <Inspector 
-        selection={selection}
-        canvasProps={canvasProps}
-        setCanvasProps={setCanvasProps}
-        pageLayout={pageLayout}
-        setPageLayout={setPageLayout}
-        canvasSections={canvasSections}
-        setCanvasSections={setCanvasSections}
-      />
-    </div>
-  );
+// Server component - renders on server first for SEO
+export default function Page() {
+  return <BuilderApp />;
 }

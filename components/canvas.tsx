@@ -11,6 +11,7 @@ interface CanvasProps {
   setCanvasSections: React.Dispatch<React.SetStateAction<CanvasSection[]>>;
   selection: SelectionData;
   setSelection: React.Dispatch<React.SetStateAction<SelectionData>>;
+  isMobile?: boolean;
 }
 
 export default function Canvas({
@@ -21,6 +22,7 @@ export default function Canvas({
   setCanvasSections,
   selection,
   setSelection,
+  isMobile = false
 }: CanvasProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
 
@@ -28,7 +30,6 @@ export default function Canvas({
   useEffect(() => {
     const el = canvasRef.current;
     if (el) {
-      // Scroll to center the page layout
       const scrollX = pageLayout.position.x - el.clientWidth / 2 + pageLayout.width / 2;
       const scrollY = pageLayout.position.y - el.clientHeight / 2 + pageLayout.height / 2;
       el.scrollTo(scrollX, scrollY);
@@ -39,6 +40,11 @@ export default function Canvas({
     setSelection({ type: 'canvas', id: null });
   };
 
+  // Calculate responsive offsets
+  const leftOffset = isMobile ? 0 : 300;
+  const rightOffset = isMobile ? 0 : 300;
+  const bottomOffset = isMobile ? 80 : 0;
+
   return (
     <main
       ref={canvasRef}
@@ -46,9 +52,9 @@ export default function Canvas({
       style={{
         position: "absolute",
         top: 50,
-        left: 300,
-        right: 300,
-        bottom: 0,
+        left: leftOffset,
+        right: rightOffset,
+        bottom: bottomOffset,
         overflow: "scroll",
         background: canvasProps.background,
       }}
@@ -73,6 +79,7 @@ export default function Canvas({
           setSelection={setSelection}
           canvasSections={canvasSections}
           setCanvasSections={setCanvasSections}
+          isMobile={isMobile}
         />
       </div>
     </main>

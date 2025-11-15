@@ -10,6 +10,7 @@ interface PageContainerProps {
   setSelection: React.Dispatch<React.SetStateAction<SelectionData>>;
   canvasSections: CanvasSection[];
   setCanvasSections: React.Dispatch<React.SetStateAction<CanvasSection[]>>;
+  isMobile?: boolean;
 }
 
 export default function PageContainer({
@@ -19,14 +20,14 @@ export default function PageContainer({
   setSelection,
   canvasSections,
   setCanvasSections,
+  isMobile = false
 }: PageContainerProps) {
-  const isSelected = selection.type === 'pageContainer';
+  const isPageSelected = selection.type === 'pageContainer';
   const [isDraggingContainer, setIsDraggingContainer] = useState(false);
   const [draggedSectionIndex, setDraggedSectionIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   const handleContainerMouseDown = (e: React.MouseEvent) => {
-    // Only allow dragging from the header area
     const target = e.target as HTMLElement;
     if (!target.closest('.page-header')) return;
     
@@ -59,10 +60,9 @@ export default function PageContainer({
   };
 
   const handleContainerClick = (e: React.MouseEvent) => {
-    // Select container when clicking on it (but not when clicking sections inside)
     const target = e.target as HTMLElement;
     
-    // Check if click is on the container itself or empty area
+    // Only select container when clicking on empty area or header
     if (e.currentTarget === target || target.closest('.empty-drop-zone') || target.closest('.page-header')) {
       e.stopPropagation();
       setSelection({ type: 'pageContainer', id: pageLayout.id });
@@ -79,6 +79,9 @@ export default function PageContainer({
   };
 
   const deleteSection = (sectionId: string) => {
+    if (isMobile) {
+      if (!confirm('Delete this section?')) return;
+    }
     setPageLayout(prev => ({
       ...prev,
       sections: prev.sections.filter(s => s.id !== sectionId)
@@ -88,13 +91,27 @@ export default function PageContainer({
     }
   };
 
+  const moveSection = (fromIndex: number, direction: 'up' | 'down') => {
+    const toIndex = direction === 'up' ? fromIndex - 1 : fromIndex + 1;
+    if (toIndex < 0 || toIndex >= pageLayout.sections.length) return;
+
+    setPageLayout(prev => {
+      const newSections = [...prev.sections];
+      const [removed] = newSections.splice(fromIndex, 1);
+      newSections.splice(toIndex, 0, removed);
+      return { ...prev, sections: newSections };
+    });
+  };
+
   const handleSectionDragStart = (e: React.DragEvent, index: number) => {
+    e.stopPropagation();
     setDraggedSectionIndex(index);
     e.dataTransfer.effectAllowed = 'move';
   };
 
   const handleSectionDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
+    e.stopPropagation();
     e.dataTransfer.dropEffect = 'move';
     setDragOverIndex(index);
   };
@@ -129,7 +146,7 @@ export default function PageContainer({
     <div
       onClick={handleContainerClick}
       style={{
-        position: "relative",
+        position: "absolute",
         top: pageLayout.position.y,
         left: pageLayout.position.x,
         width: pageLayout.width,
@@ -138,28 +155,23 @@ export default function PageContainer({
         borderRadius: pageLayout.radius,
         padding: 0,
         opacity: pageLayout.opacity,
-        border: isSelected ? "1px solid rgba(25,25,25,0.75)" : "1px solid rgba(25,25,25,0.2)",
-        boxShadow: isSelected
-          ? "0 0 0 4px rgba(225,225,255,0.15), 0 8px 32px rgba(0,0,0,0.4)"
+        border: isPageSelected ? "2px solid #007aff" : "1px solid rgba(255,255,255,0.2)",
+        boxShadow: isPageSelected
+          ? "0 0 0 4px rgba(0,122,255,0.15), 0 8px 32px rgba(0,0,0,0.4)"
           : "0 8px 32px rgba(0,0,0,0.3)",
         cursor: "default",
         userSelect: "none",
-        overflow: "visible",
+        overflow: "hidden",
       }}
     >
-      {/* Page Header - Draggable */}
+      {/* Page Header */}
       <div
         className="page-header"
         onMouseDown={handleContainerMouseDown}
         style={{
-          position: "absolute",       // absolute positioning
-          top: -60,                    // height of the header or desired offset
-          left: 0,
-          width: "100%",               // full width of container
-          background: isSelected ? "rgba(25,25,27,1)" : "rgba(25,25,27,0.8)",
+          background: "rgba(0,0,0,0.8)",
           padding: "12px 16px",
-          borderRadius: 15,
-          border: isSelected ? "1px solid rgba(255,255,255,0.5)" : "1px solid rgba(255,255,255,0.1)",
+          borderBottom: "1px solid rgba(255,255,255,0.1)",
           fontSize: 13,
           fontWeight: 600,
           color: "#fff",
@@ -171,6 +183,7 @@ export default function PageContainer({
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 16 }}>☰</span>
           <span>{pageLayout.name}</span>
         </div>
         <span style={{ fontSize: 11, opacity: 0.6 }}>
@@ -179,12 +192,11 @@ export default function PageContainer({
       </div>
 
       {/* Page Content Area */}
-      <div style={{ padding: 0 }}>
+      <div style={{ padding: pageLayout.padding }}>
         {pageLayout.sections.length === 0 ? (
           <div
             className="empty-drop-zone"
             style={{
-              height: "100%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -192,100 +204,148 @@ export default function PageContainer({
               color: "#999",
               fontSize: 14,
               flexDirection: "column",
-              gap: 0,
+              gap: 12,
+              background: "rgba(0,0,0,0.02)",
+              borderRadius: 8,
+              border: "2px dashed rgba(0,0,0,0.1)",
             }}
           >
             <div style={{ fontSize: 48, opacity: 0.3 }}>📄</div>
-            <div style={{ fontWeight: 600 }}>Add sections</div>
+            <div style={{ fontWeight: 600 }}>Click to add sections</div>
             <div style={{ fontSize: 12, opacity: 0.6 }}>
               Click components from the sidebar to add them here
             </div>
           </div>
         ) : (
           pageLayout.sections.map((section, index) => {
-            const isSectionSelected = selection.id === section.id && selection.type === 'section';
+            const isSectionSelected = selection.type === 'section' && selection.id === section.id;
             const isDragOver = dragOverIndex === index;
             
             return (
               <div
                 key={section.id}
-                draggable
-                onDragStart={(e) => handleSectionDragStart(e, index)}
-                onDragOver={(e) => handleSectionDragOver(e, index)}
-                onDrop={(e) => handleSectionDrop(e, index)}
-                onDragEnd={handleSectionDragEnd}
                 onClick={(e) => handleSectionClick(e, section.id, section.type)}
                 className="page-section"
                 style={{
                   position: "relative",
                   marginBottom: 0,
                   border: isSectionSelected
-                    ? "1px solid rgba(255,255,255,0.75)"
+                    ? "2px solid #007aff"
                     : isDragOver
-                    ? "2px solid #ffff"
+                    ? "2px solid #00ff88"
                     : "2px solid transparent",
                   borderRadius: 4,
                   transition: "border 0.15s",
-                  cursor: "move",
+                  cursor: "pointer",
                   opacity: draggedSectionIndex === index ? 0.5 : 1,
                 }}
               >
-                {/* Section Controls */}
-                <div
-                  className="section-controls"
-                  style={{
-                    position: "absolute",
-                    display: isSectionSelected ? "flex" : "none",
-                    gap: 4,
-                    zIndex: 10,
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: 25,
-                    width: "100%",
-                    height: "100%",
-                    overflow: "visible",
-
-                  }}
-                >
+                {/* Section Controls - Show when section is selected */}
+                {isSectionSelected && (
                   <div
+                    className="section-controls"
                     style={{
                       position: "absolute",
-                      left: -70,
-                      alignContent: "end",
-                      background: "rgba(255,255,255,0.9)",
-                      border: "none",
-                      borderRadius: 10,
-                      padding: "4px 8px 4px 8px",
-                      color: "#000",
-                      fontSize: 13,
-                      fontWeight: 600,
-                      cursor: "grab",
-                      
+                      top: 8,
+                      right: 8,
+                      display: "flex",
+                      gap: 4,
+                      zIndex: 10,
+                      background: "rgba(0,122,255,0.95)",
+                      padding: "4px",
+                      borderRadius: 6,
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.2)"
                     }}
                   >
-                    Reorder
+                    {isMobile ? (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            moveSection(index, 'up');
+                          }}
+                          disabled={index === 0}
+                          style={{
+                            background: "rgba(255,255,255,0.2)",
+                            border: "none",
+                            borderRadius: 4,
+                            padding: "6px 10px",
+                            color: "#fff",
+                            fontSize: 14,
+                            cursor: index === 0 ? "not-allowed" : "pointer",
+                            opacity: index === 0 ? 0.5 : 1,
+                            fontWeight: 600
+                          }}
+                        >
+                          ↑
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            moveSection(index, 'down');
+                          }}
+                          disabled={index === pageLayout.sections.length - 1}
+                          style={{
+                            background: "rgba(255,255,255,0.2)",
+                            border: "none",
+                            borderRadius: 4,
+                            padding: "6px 10px",
+                            color: "#fff",
+                            fontSize: 14,
+                            cursor: index === pageLayout.sections.length - 1 ? "not-allowed" : "pointer",
+                            opacity: index === pageLayout.sections.length - 1 ? 0.5 : 1,
+                            fontWeight: 600
+                          }}
+                        >
+                          ↓
+                        </button>
+                      </>
+                    ) : (
+                      <div
+                        draggable
+                        onDragStart={(e) => handleSectionDragStart(e, index)}
+                        onDragOver={(e) => handleSectionDragOver(e, index)}
+                        onDrop={(e) => handleSectionDrop(e, index)}
+                        onDragEnd={handleSectionDragEnd}
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                          cursor: "grab",
+                          color: "#fff",
+                          fontSize: 11,
+                          fontWeight: 600,
+                          padding: "4px 8px",
+                          background: "rgba(255,255,255,0.1)",
+                          borderRadius: 4
+                        }}
+                      >
+                        <span>⠿</span>
+                        <span>Drag</span>
+                      </div>
+                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteSection(section.id);
+                      }}
+                      style={{
+                        background: "rgba(255,59,48,0.95)",
+                        border: "none",
+                        borderRadius: 4,
+                        padding: "6px 10px",
+                        color: "#fff",
+                        fontSize: 11,
+                        cursor: "pointer",
+                        fontWeight: 600,
+                      }}
+                    >
+                      🗑️
+                    </button>
                   </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteSection(section.id);
-                    }}
-                    style={{
-                      position: "absolute",
-                      right: -60,
-                      background: "rgba(255,59,48,0.9)",
-                      border: "none",
-                      borderRadius: 10,
-                      padding: "4px 8px 4px 8px",
-                      color: "#fff",
-                      fontSize: 13,
-                      fontWeight: 600,
-                      cursor: "pointer",
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
+                )}
+                
                 <SectionRenderer section={section} />
               </div>
             );
