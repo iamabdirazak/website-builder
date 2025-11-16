@@ -114,8 +114,8 @@ export default function Inspector({
     >
       <div
         style={{
-          fontWeight: 600,
-          fontSize: 14,
+          fontWeight: 800,
+          fontSize: 16,
           color: "#fff",
           borderBottom: "1px solid rgba(255,255,255,0.1)",
           paddingBottom: 8,

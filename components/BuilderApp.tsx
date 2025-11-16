@@ -129,7 +129,7 @@ export default function BuilderApp() {
                 cursor: "pointer"
               }}
             >
-              Components
+              Library
             </button>
             <button
               onClick={() => setActivePanel(activePanel === 'inspector' ? null : 'inspector')}
@@ -145,7 +145,7 @@ export default function BuilderApp() {
                 cursor: "pointer"
               }}
             >
-              Properties
+              Inspector
             </button>
           </div>
 
