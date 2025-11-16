@@ -73,8 +73,7 @@ export default function BottomSheet({ children }: BottomSheetProps) {
 
       {/* Header */}
       <div style={{
-        padding: '0 16px 12px',
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
+        padding: '0 16px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
