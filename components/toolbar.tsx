@@ -105,7 +105,7 @@ export default function Toolbar({
         <div
           style={{
             height: "100%",
-            width: isMobile ? "0px" : "300px",
+            width: isMobile ? "auto" : "300px",
             display: "flex",
             alignItems: "center",
             justifyContent: isMobile ? "flex-start" : "space-between",
@@ -113,7 +113,7 @@ export default function Toolbar({
             fontSize: 16,
             fontWeight: 600,
             color: "#fff",
-            padding: "10px 15px",
+            padding: isMobile ? 0 : "0 15px"
           }}
         >
           {isMobile || onToggleSidebar ? (
@@ -128,7 +128,7 @@ export default function Toolbar({
                 alignItems: "center",
               }}
             >
-              <img src="/sidebarLeft.png" style={{ width: "auto", height: 20 }} alt="Toggle Sidebar" />
+              {!isMobile && <img src="/sidebarLeft.png" style={{ width: "auto", height: 20 }} />}
             </button>
           ) : (
             <>
@@ -159,7 +159,7 @@ export default function Toolbar({
             gap: isMobile ? 8 : 12,
             flexGrow: 1,
             padding: "0 15px",
-            maxWidth: isMobile ? "100%" : "100%",
+            maxWidth: "100%",
           }}
         >
           <button
@@ -263,7 +263,7 @@ export default function Toolbar({
         
 
         {/* Right side */}
-        <div style={{ display: "flex", gap: 8, alignItems: "center", height: "100%", width: isMobile ? "0px" : "300px" , justifyContent: "flex-end", padding: "0 15px" }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", height: "100%", width: isMobile ? "auto" : "300px" , justifyContent: "flex-end", padding: isMobile ? 0 : "0 15px" }}>
           {(onToggleInspector || isMobile) && (
             <button
               onClick={onToggleInspector}
