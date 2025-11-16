@@ -49,14 +49,15 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
       <div
         style={{
           padding: "16px",
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
         }}
       >
         <div
           style={{
-            fontWeight: 600,
-            fontSize: 14,
+            fontWeight: 800,
+            fontSize: 16,
             color: "#fff",
+            borderBottom: "1px solid rgba(255,255,255,0.1)",
+            paddingBottom: 8,
           }}
         >
           Library

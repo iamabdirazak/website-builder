@@ -105,7 +105,7 @@ export default function Toolbar({
         <div
           style={{
             height: "100%",
-            width: isMobile ? "auto" : "300px",
+            width: isMobile ? "0px" : "300px",
             display: "flex",
             alignItems: "center",
             justifyContent: isMobile ? "flex-start" : "space-between",
@@ -159,7 +159,7 @@ export default function Toolbar({
             gap: isMobile ? 8 : 12,
             flexGrow: 1,
             padding: "0 15px",
-            maxWidth: isMobile ? "none" : "100%",
+            maxWidth: isMobile ? "100%" : "100%",
           }}
         >
           <button
@@ -263,7 +263,7 @@ export default function Toolbar({
         
 
         {/* Right side */}
-        <div style={{ display: "flex", gap: 8, alignItems: "center", height: "100%", width: "300px" , justifyContent: "flex-end", padding: "0 15px" }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", height: "100%", width: isMobile ? "0px" : "300px" , justifyContent: "flex-end", padding: "0 15px" }}>
           {(onToggleInspector || isMobile) && (
             <button
               onClick={onToggleInspector}

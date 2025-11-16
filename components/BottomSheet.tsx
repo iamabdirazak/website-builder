@@ -34,7 +34,7 @@ export default function BottomSheet({ children }: BottomSheetProps) {
   };
 
   const collapsedHeight = 80;
-  const expandedHeight = window.innerHeight * 0.7;
+  const expandedHeight = window.innerHeight * 0.75;
 
   return (
     <div
@@ -51,7 +51,7 @@ export default function BottomSheet({ children }: BottomSheetProps) {
         background: 'rgba(25,25,27,0.95)',
         backdropFilter: 'blur(25px) saturate(180%)',
         borderTop: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: '16px 16px 0 0',
+        borderRadius: '25px 25px 0 0',
         zIndex: 30,
         transition: 'height 0.3s ease-out',
         overflow: 'hidden',
@@ -77,24 +77,11 @@ export default function BottomSheet({ children }: BottomSheetProps) {
         borderBottom: '1px solid rgba(255,255,255,0.08)',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'center'
       }}>
         <span style={{ color: '#fff', fontSize: 14, fontWeight: 600 }}>
-          {isExpanded ? 'Panel' : 'Swipe up to edit'}
+          {isExpanded ? 'Swipe Down' : 'Swipe Up'}
         </span>
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: '#007aff',
-            fontSize: 12,
-            cursor: 'pointer',
-            fontWeight: 500
-          }}
-        >
-          {isExpanded ? 'Collapse' : 'Expand'}
-        </button>
       </div>
 
       {/* Content */}
