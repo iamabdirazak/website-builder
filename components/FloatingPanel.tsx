@@ -19,7 +19,7 @@ export default function FloatingPanel({ children, onClose, position = 'left' }: 
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0,0,0,0.5)',
+          background: 'transparent',
           zIndex: 40,
           animation: 'fadeIn 0.2s ease-out'
         }}
@@ -33,7 +33,7 @@ export default function FloatingPanel({ children, onClose, position = 'left' }: 
           [position]: 0,
           width: 300,
           height: 'calc(100vh - 50px)',
-          background: 'rgba(25,25,27,0.95)',
+          background: 'transparent',
           backdropFilter: 'blur(25px) saturate(180%)',
           borderRight: position === 'left' ? '1px solid rgba(255,255,255,0.08)' : 'none',
           borderLeft: position === 'right' ? '1px solid rgba(255,255,255,0.08)' : 'none',

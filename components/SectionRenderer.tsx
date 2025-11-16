@@ -13,29 +13,22 @@ export default function SectionRenderer({ section }: SectionRendererProps) {
     case 'header':
       return (
         <header style={{ background: "#141414", color: "#fff", padding: "10px" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 20px" }}>
-            <img src={props.logo} alt="Logo" style={{ height: 32, width: "auto" }} />
-            <nav style={{ display: "flex", gap: 24 }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", width: "100%", paddingLeft: 50 }}>
+              <img src={props.logo} alt="Logo" style={{ height: 18, width: "auto" }} />
+            </div>
+            
+            <nav style={{ display: "flex", gap: 24,  width: "flex", justifyContent: "center" }}>
               {props.navigation.map((item: string, i: number) => (
-                <a key={i} href="#" style={{ color: "#fff", textDecoration: "none", fontSize: 14 }}>
+                <a key={i} href="#" style={{ color: "#fff", textDecoration: "none", fontSize: 13 }}>
                   {item}
                 </a>
               ))}
             </nav>
-            <button
-              style={{
-                background: "#fff",
-                border: "none",
-                color: "#000",
-                fontSize: 12,
-                fontWeight: 550,
-                borderRadius: 15,
-                padding: "8px 16px",
-                cursor: "pointer",
-              }}
-            >
-              {props.button}
-            </button>
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", width: "100%", paddingRight: 50}}>
+              <img src={props.button} alt="Logo" style={{ height: 20, width: "auto" }} />
+            </div>
           </div>
         </header>
       );

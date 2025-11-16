@@ -168,7 +168,7 @@ export default function PageContainer({
     <div
       onClick={handleContainerClick}
       style={{
-        position: "absolute",
+        position: "relative",
         top: pageLayout.position.y,
         left: pageLayout.position.x,
         width: pageLayout.width,
@@ -177,13 +177,13 @@ export default function PageContainer({
         borderRadius: pageLayout.radius,
         padding: 0,
         opacity: pageLayout.opacity,
-        border: isPageSelected ? "2px solid #fff" : "1px solid rgba(255,255,255,0.2)",
+        border: isPageSelected ? "1px solid #fff" : "1px solid rgba(255,255,255,0.2)",
         boxShadow: isPageSelected
           ? "0 0 0 4px rgba(255,255,255,0.15), 0 8px 32px rgba(0,0,0,0.4)"
           : "0 8px 32px rgba(0,0,0,0.3)",
         cursor: "default",
         userSelect: "none",
-        overflow: "hidden",
+        overflow: "visible",
       }}
     >
       {/* Page Header */}
@@ -191,9 +191,13 @@ export default function PageContainer({
         className="page-header"
         onMouseDown={handleContainerMouseDown}
         style={{
-          background: "rgba(0,0,0,0.8)",
-          padding: "12px 16px",
-          borderBottom: "1px solid rgba(255,255,255,0.1)",
+          position: "absolute",
+          top: -60,
+          width: "100%",
+          background: "rgba(25,25,27,0.8)",
+          padding: "10px 15px",
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: 15,
           fontSize: 13,
           fontWeight: 600,
           color: "#fff",
@@ -214,7 +218,7 @@ export default function PageContainer({
       </div>
 
       {/* Page Content Area */}
-      <div style={{ padding: pageLayout.padding }}>
+      <div style={{ padding: 0 }}>
         {pageLayout.sections.length === 0 ? (
           <div
             className="empty-drop-zone"
@@ -227,15 +231,12 @@ export default function PageContainer({
               fontSize: 14,
               flexDirection: "column",
               gap: 12,
-              background: "rgba(0,0,0,0.02)",
-              borderRadius: 8,
-              border: "2px dashed rgba(0,0,0,0.1)",
             }}
           >
             <div style={{ fontSize: 48, opacity: 0.3 }}>📄</div>
-            <div style={{ fontWeight: 600 }}>Click to add sections</div>
+            <div style={{ fontWeight: 600 }}>Add sections</div>
             <div style={{ fontSize: 12, opacity: 0.6 }}>
-              Click components from the sidebar to add them here
+              Click components from the sidebar to add here
             </div>
           </div>
         ) : (
@@ -259,10 +260,7 @@ export default function PageContainer({
                   position: "relative",
                   marginBottom: 0,
                   border: isSectionSelected
-                    ? "1px solid #ffff"
-                    : isDragOver
-                    ? "2px solid #ffff"
-                    : "2px solid transparent",
+                    ? "1px solid #ffff" : isDragOver ? "1px solid #34c759" : "1px solid transparent",
                   borderRadius: 4,
                   transition: isDragging ? "none" : "border 0.15s, opacity 0.15s",
                   cursor: isMobile ? "pointer" : "move",
@@ -336,7 +334,7 @@ export default function PageContainer({
                           color: "#fff",
                           fontSize: 11,
                           fontWeight: 600,
-                          padding: "4px 8px",
+                          padding: "4px 15px",
                           background: "rgba(25,25,27,0.75)",
                           backdropFilter: "blur(25px) saturate(180%)",
                           borderRight: "1px solid rgba(255,255,255,0.08)",
@@ -355,7 +353,7 @@ export default function PageContainer({
                       style={{
                         border: "none",
                         borderRadius: 4,
-                        padding: "6px 10px",
+                        padding: "6px 15px",
                         color: "#fff",
                         fontSize: 11,
                         cursor: "pointer",

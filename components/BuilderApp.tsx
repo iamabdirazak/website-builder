@@ -30,7 +30,7 @@ export default function BuilderApp() {
     height: 600,
     background: "#ffffff",
     radius: 0,
-    padding: 16,
+    padding: 0,
     opacity: 1,
     position: { x: 1500, y: 1000 },
     sections: []

@@ -3,9 +3,9 @@ export const SECTION_TEMPLATES = {
     type: 'header',
     props: {
       title: 'iKreatify',
-      logo: "../icon.png",
+      logo: "/logo.png",
       navigation: ['About', 'Products', 'Services', 'Support'],
-      button: 'Get Started',
+      button: "/bag.png",
     }
   },
   hero: {

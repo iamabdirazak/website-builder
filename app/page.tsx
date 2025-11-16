@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import BuilderApp from '../components/BuilderApp';
 
 export const metadata: Metadata = {
-  title: 'Website Builder - Visual Page Construction Tool',
+  title: 'Website Builder - iKreatify',
   description: 'Professional-grade, browser-based website builder with drag-and-drop interface',
   keywords: ['website builder', 'page builder', 'visual editor', 'drag and drop'],
 };

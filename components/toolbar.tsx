@@ -102,67 +102,51 @@ export default function Toolbar({
         }}
       >
         {/* Left side */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {/* Tablet/Mobile panel toggles */}
-          {(onToggleSidebar || isMobile) && (
+        <div
+          style={{
+            height: "100%",
+            width: isMobile ? "auto" : "300px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: isMobile ? "flex-start" : "space-between",
+            gap: 8,
+            fontSize: 16,
+            fontWeight: 600,
+            color: "#fff",
+            padding: "10px 15px",
+          }}
+        >
+          {isMobile || onToggleSidebar ? (
             <button
               onClick={onToggleSidebar}
               style={{
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.12)",
-                borderRadius: 6,
-                padding: "6px 10px",
-                color: "#fff",
-                fontSize: 13,
+                background: "transparent",
+                border: "none",
                 cursor: "pointer",
+                padding: 0,
                 display: "flex",
                 alignItems: "center",
-                gap: 4
               }}
             >
-              <span style={{ fontSize: 16 }}>☰</span>
-              {!isMobile && <span>Components</span>}
+              <img src="/sidebarLeft.png" style={{ width: "auto", height: 20 }} alt="Toggle Sidebar" />
             </button>
-          )}
-
-          {!isMobile && (
-            <div style={{
-          height: "100%",
-          width: "300px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 8,
-          fontSize: 16,
-          fontWeight: 600,
-          color: "#fff",
-          padding: "10px 15px 10px 15px",
-        }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <img
-              src="../icon.png"
-              alt="Logo"
-              style={{ height: 24, width: "auto" }}
-            />
-            <span>iKreatify</span>
-          </div>
-          <div style={{
-              color: "#f0f0f0",
-              fontSize: 12,
-              fontWeight: 500,
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-          }}>
-            {/* <img src="/sidebarLeft.png" style={{ width: "auto", height: 20 }} /> */}
-          </div>
-        </div>
+          ) : (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <img
+                  src="/icon.png"
+                  alt="Logo"
+                  style={{ height: 24, width: "auto" }}
+                />
+                <span>iKreatify</span>
+              </div>
+            </>
           )}
         </div>
 
@@ -171,15 +155,18 @@ export default function Toolbar({
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between", // centers the whole group
-            gap: 12,                   // space between input and indicator
+            justifyContent: "space-between",
+            gap: isMobile ? 8 : 12,
             flexGrow: 1,
             padding: "0 15px",
+            maxWidth: isMobile ? "none" : "100%",
           }}
         >
           <button
             onClick={() => fileInputRef.current?.click()}
             style={{
+              background: "transparent",
+              border: "none",
               borderRadius: 6,
               color: "#f0f0f0",
               fontSize: 12,
@@ -188,77 +175,90 @@ export default function Toolbar({
               display: "flex",
               alignItems: "center",
               flexDirection: "column",
+              gap: 2,
             }}
           >
-            <img src="/import.png" style={{ width: "auto", height: 23 }} />
-            Import
+            <img src="/import.png" style={{ width: "auto", height: 23 }} alt="Import" />
+            {!isMobile && <span>Import</span>}
           </button>
 
           <div
-  style={{
-    position: "relative",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexGrow: 1,
-  }}
->
-  {/* Input */}
-  <input
-    type="text"
-    value={pageLayout.name}
-    onChange={(e) =>
-      setPageLayout((prev) => ({ ...prev, name: e.target.value }))
-    }
-    style={{
-      background: "transparent",
-      border: "1px solid rgba(255,255,255,0.12)",
-      outline: "none",
-      color: "#fff",
-      fontSize: 14,
-      fontWeight: 600,
-      padding: "6px 8px",
-      borderRadius: 15,
-      minWidth: 150,
-      textAlign: "center",
-    }}
-    onFocus={(e) =>
-      (e.target.style.background = "rgba(255,255,255,0.06)")
-    }
-    onBlur={(e) => (e.target.style.background = "transparent")}
-  />
+            style={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexGrow: 1,
+              maxWidth:  "185px",
+            }}
+          >
+            <input
+              type="text"
+              value={pageLayout.name}
+              onChange={(e) =>
+                setPageLayout((prev) => ({ ...prev, name: e.target.value }))
+              }
+              style={{
+                background: "transparent",
+                border: "1px solid rgba(255,255,255,0.12)",
+                outline: "none",
+                color: "#fff",
+                fontSize: isMobile ? 12 : 14,
+                fontWeight: 600,
+                padding: isMobile ? "6px 35px" : "6px 50px",
+                borderRadius: 15,
+                width: "100%",
+                textAlign: "center",
+              }}
+              onFocus={(e) =>
+                (e.target.style.background = "rgba(255,255,255,0.06)")
+              }
+              onBlur={(e) => (e.target.style.background = "transparent")}
+            />
 
-  {/* Absolute indicator - doesn't push anything */}
-  {lastSaved !== undefined && (
-    <div
-      style={{
-        position: "absolute",
-        left: "59%",       // adjust as needed
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <SaveIndicator lastSaved={lastSaved} isSaving={isSaving || false} />
-    </div>
-  )}
-</div>
+            {lastSaved !== undefined && (
+              <div
+                style={{
+                  position: "absolute",
+                  right: isMobile ? "8px" : "14px",
+                  display: "flex",
+                  alignItems: "center",
+                  pointerEvents: "none",
+                }}
+              >
+                <SaveIndicator lastSaved={lastSaved} isSaving={isSaving || false} />
+              </div>
+            )}
+          </div>
 
           <button
             onClick={exportJSON}
             disabled={!isExportEnabled}
             style={{
+              background: "transparent",
+              border: "none",
               color: "#f0f0f0",
               fontSize: 12,
-              cursor: "pointer",
+              fontWeight: 500,
+              cursor: isExportEnabled ? "pointer" : "default",
               display: "flex",
               alignItems: "center",
               flexDirection: "column",
+              gap: 2,
+              opacity: isExportEnabled ? 1 : 0.4,
             }}
           >
-            <img src="/export.png" style={{ width: "auto", height: 23 }} />
-            Export
+            <img 
+              src="/export.png" 
+              style={{ 
+                width: "auto", 
+                height: 23,
+                opacity: isExportEnabled ? 1 : 0.8
+              }} 
+              alt="Export" 
+            />
+            {!isMobile && <span>Export</span>}
           </button>
-
         </div>
         
 
@@ -268,9 +268,8 @@ export default function Toolbar({
             <button
               onClick={onToggleInspector}
               style={{
-                border: "1px solid rgba(255,255,255,0.12)",
                 borderRadius: 6,
-                padding: "6px 10px",
+                padding: 0,
                 color: "#fff",
                 fontSize: 13,
                 cursor: "pointer",
@@ -279,12 +278,12 @@ export default function Toolbar({
                 gap: 4
               }}
             >
-              <span style={{ fontSize: 16 }}>⚙</span>
-              {!isMobile && <span>Properties</span>}
+              {!isMobile && <img src="/sidebarRight.png" style={{ width: "auto", height: 20 }} />}
+              
             </button>
           )}
 
-          {/* <img src="/sidebarRight.png" style={{ width: "auto", height: 20 }} /> */}
+          
         </div>
       </div>
       <input
