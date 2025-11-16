@@ -173,7 +173,7 @@ export default function PageContainer({
         left: pageLayout.position.x,
         width: pageLayout.width,
         minHeight: pageLayout.height,
-        transform: isMobile ? "scale(0.65)" : "scale(1)",
+        transform: isMobile ? "scale(0.5)" : "scale(1)",
         background: pageLayout.background,
         borderRadius: pageLayout.radius,
         padding: 0,
