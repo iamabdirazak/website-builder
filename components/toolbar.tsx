@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef } from "react";
 import { PageLayout, CanvasSection, SelectionData } from "../app/page";
+import SaveIndicator from "../components/SaveIndicator";
 
 interface ToolbarProps {
   pageLayout: PageLayout;
@@ -8,6 +9,12 @@ interface ToolbarProps {
   setPageLayout: React.Dispatch<React.SetStateAction<PageLayout>>;
   setCanvasSections: React.Dispatch<React.SetStateAction<CanvasSection[]>>;
   setSelection: React.Dispatch<React.SetStateAction<SelectionData>>;
+  selection: SelectionData;
+  lastSaved?: string | null;
+  isSaving?: boolean;
+  isMobile?: boolean;
+  onToggleSidebar?: () => void;
+  onToggleInspector?: () => void;
 }
 
 export default function Toolbar({
@@ -15,11 +22,22 @@ export default function Toolbar({
   canvasSections,
   setPageLayout,
   setCanvasSections,
-  setSelection
+  setSelection,
+  selection,
+  lastSaved,
+  isSaving,
+  isMobile,
+  onToggleSidebar,
+  onToggleInspector
 }: ToolbarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const exportJSON = () => {
+    if (selection.type !== 'pageContainer') {
+      alert('Please select the page container first (click on the page or its header)');
+      return;
+    }
+
     try {
       const exportData = {
         pageLayout,
@@ -63,6 +81,8 @@ export default function Toolbar({
     }
   };
 
+  const isExportEnabled = selection.type === 'pageContainer';
+
   return (
     <>
       <div
@@ -71,7 +91,7 @@ export default function Toolbar({
           top: 0,
           left: 0,
           right: 0,
-          height: 50,
+          height: 60,
           background: "rgba(25,25,27,0.75)",
           backdropFilter: "blur(25px) saturate(180%)",
           borderBottom: "1px solid rgba(255,255,255,0.08)",
@@ -81,108 +101,189 @@ export default function Toolbar({
           justifyContent: "space-between",
         }}
       >
-        {/* Left Section */}
-        <div style={{
-          height: "100%",
-          width: "300px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-start",
-          gap: 8,
-          fontSize: 16,
-          fontWeight: 600,
-          color: "#fff",
-          padding: "10px 15px 10px 15px",
-        }}>
-          <img
-          src="../icon.png"
-          alt="Logo"
-          style={{ height: 24, width: "auto" }}
-        />
-        <span>iKreatify</span>
+        {/* Left side */}
+        <div
+          style={{
+            height: "100%",
+            width: isMobile ? "auto" : "300px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: isMobile ? "flex-start" : "space-between",
+            gap: 8,
+            fontSize: 16,
+            fontWeight: 600,
+            color: "#fff",
+            padding: "10px 15px",
+          }}
+        >
+          {isMobile || onToggleSidebar ? (
+            <button
+              onClick={onToggleSidebar}
+              style={{
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <img src="/sidebarLeft.png" style={{ width: "auto", height: 20 }} alt="Toggle Sidebar" />
+            </button>
+          ) : (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                <img
+                  src="/icon.png"
+                  alt="Logo"
+                  style={{ height: 24, width: "auto" }}
+                />
+                <span>iKreatify</span>
+              </div>
+            </>
+          )}
         </div>
 
-        {/* Center Section */}
-        <div style={{ 
-          height: "100%",
-          width: "auto",
-          display: "flex", 
-          alignItems: "center", 
-          justifyContent: "center", 
-          gap: 12, 
-          }}>
-          <input
-            type="text"
-            value={pageLayout.name}
-            onChange={(e) => setPageLayout(prev => ({ ...prev, name: e.target.value }))}
-            style={{
-              background: "transparent",
-              border: "1px solid rgba(255,255,255,0.12)",
-              outline: "none",
-              color: "#fff",
-              fontSize: 14,
-              fontWeight: 600,
-              textAlign: "center",
-              padding: "6px 8px",
-              borderRadius: 15,
-              minWidth: 150,
-            }}
-            onFocus={(e) => e.target.style.background = "rgba(255,255,255,0.06)"}
-            onBlur={(e) => e.target.style.background = "transparent"}
-          />
-        </div>
-        
-        {/* Right Section */}
-        <div style={{
-          height: "100%",
-          width: "300px",
-          display: "flex", 
-          alignItems: "center", 
-          justifyContent: "space-between", 
-          gap: 10, 
-          padding: "10px 15px 10px 15px",
-          }}>
+        {/* Center - Input + Save indicator */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: isMobile ? 8 : 12,
+            flexGrow: 1,
+            padding: "0 15px",
+            maxWidth: isMobile ? "none" : "100%",
+          }}
+        >
           <button
             onClick={() => fileInputRef.current?.click()}
             style={{
-              background: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              borderRadius: 15,
-              padding: "6px 12px",
-              color: "#fff",
-              fontSize: 13,
-              fontWeight: 650,
+              background: "transparent",
+              border: "none",
+              borderRadius: 6,
+              color: "#f0f0f0",
+              fontSize: 12,
+              fontWeight: 500,
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
-              gap: 6,
+              flexDirection: "column",
+              gap: 2,
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
-            onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.08)"}
           >
-            Import
+            <img src="/import.png" style={{ width: "auto", height: 23 }} alt="Import" />
+            {!isMobile && <span>Import</span>}
           </button>
+
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexGrow: 1,
+              maxWidth:  "185px",
+            }}
+          >
+            <input
+              type="text"
+              value={pageLayout.name}
+              onChange={(e) =>
+                setPageLayout((prev) => ({ ...prev, name: e.target.value }))
+              }
+              style={{
+                background: "transparent",
+                border: "1px solid rgba(255,255,255,0.12)",
+                outline: "none",
+                color: "#fff",
+                fontSize: isMobile ? 12 : 14,
+                fontWeight: 600,
+                padding: isMobile ? "6px 35px" : "6px 50px",
+                borderRadius: 15,
+                width: "100%",
+                textAlign: "center",
+              }}
+              onFocus={(e) =>
+                (e.target.style.background = "rgba(255,255,255,0.06)")
+              }
+              onBlur={(e) => (e.target.style.background = "transparent")}
+            />
+
+            {lastSaved !== undefined && (
+              <div
+                style={{
+                  position: "absolute",
+                  right: isMobile ? "8px" : "14px",
+                  display: "flex",
+                  alignItems: "center",
+                  pointerEvents: "none",
+                }}
+              >
+                <SaveIndicator lastSaved={lastSaved} isSaving={isSaving || false} />
+              </div>
+            )}
+          </div>
 
           <button
             onClick={exportJSON}
+            disabled={!isExportEnabled}
             style={{
-              background: "rgba(255,255,255,1)",
-              border: "1px solid rgba(225,225,255,0.3)",
-              borderRadius: 15,
-              padding: "6px 12px",
-              color: "#000",
-              fontSize: 13,
-              fontWeight: 750,
-              cursor: "pointer",
+              background: "transparent",
+              border: "none",
+              color: "#f0f0f0",
+              fontSize: 12,
+              fontWeight: 500,
+              cursor: isExportEnabled ? "pointer" : "default",
               display: "flex",
               alignItems: "center",
-              gap: 6,
+              flexDirection: "column",
+              gap: 2,
+              opacity: isExportEnabled ? 1 : 0.4,
             }}
-            onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.85)"}
-            onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,1)"}
           >
-             Export
+            <img 
+              src="/export.png" 
+              style={{ 
+                width: "auto", 
+                height: 23,
+                opacity: isExportEnabled ? 1 : 0.8
+              }} 
+              alt="Export" 
+            />
+            {!isMobile && <span>Export</span>}
           </button>
+        </div>
+        
+
+        {/* Right side */}
+        <div style={{ display: "flex", gap: 8, alignItems: "center", height: "100%", width: "300px" , justifyContent: "flex-end", padding: "0 15px" }}>
+          {(onToggleInspector || isMobile) && (
+            <button
+              onClick={onToggleInspector}
+              style={{
+                borderRadius: 6,
+                padding: 0,
+                color: "#fff",
+                fontSize: 13,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 4
+              }}
+            >
+              {!isMobile && <img src="/sidebarRight.png" style={{ width: "auto", height: 20 }} />}
+              
+            </button>
+          )}
+
+          
         </div>
       </div>
       <input

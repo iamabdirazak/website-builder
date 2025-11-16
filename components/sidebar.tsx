@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { SECTION_TEMPLATES } from "./SectionTemplates";
 import { CanvasSection, PageLayout, SectionData } from "../app/page";
 
@@ -11,8 +11,6 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ canvasSections, setCanvasSections, pageLayout, setPageLayout }: SidebarProps) {
-  const [activeTab, setActiveTab] = useState<"Library" | "Layers">("Library");
-
   const handleAddSection = (templateKey: string) => {
     const template = SECTION_TEMPLATES[templateKey as keyof typeof SECTION_TEMPLATES];
     if (!template) return;
@@ -34,13 +32,12 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
     <aside
       style={{
         position: "fixed",
-        top: 50,
+        top: 60,
         left: 0,
         width: 300,
-        height: "calc(100vh - 50px)",
+        height: "calc(100vh - 60px)",
         background: "rgba(25,25,27,0.75)",
         backdropFilter: "blur(25px) saturate(180%)",
-        WebkitBackdropFilter: "blur(20px) saturate(180%)",
         borderRight: "1px solid rgba(255,255,255,0.08)",
         padding: 0,
         zIndex: 20,
@@ -48,151 +45,71 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
         flexDirection: "column",
       }}
     >
-      {/* Tabs */}
+      {/* Header */}
       <div
         style={{
-          display: "flex",
+          padding: "16px",
           borderBottom: "1px solid rgba(255,255,255,0.08)",
-          padding: "0 16px",
         }}
       >
-        {(["Library", "Layers"] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              flex: 1,
-              padding: "12px 0",
-              background: "transparent",
-              border: "none",
-              borderBottom: activeTab === tab ? "2px solid #fff" : "2px solid transparent",
-              color: activeTab === tab ? "#fff" : "rgba(255,255,255,0.5)",
-              fontSize: 13,
-              fontWeight: 500,
-              cursor: "pointer",
-              transition: "all 0.2s",
-            }}
-          >
-            {tab}
-          </button>
-        ))}
+        <div
+          style={{
+            fontWeight: 600,
+            fontSize: 14,
+            color: "#fff",
+          }}
+        >
+          Library
+        </div>
       </div>
 
       {/* Content */}
       <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
-        {activeTab === "Library" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {Object.keys(SECTION_TEMPLATES).map((key) => (
             <div
+              key={key}
+              onClick={() => handleAddSection(key)}
               style={{
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: 0.5,
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.6)",
-                marginBottom: 4,
+                padding: 12,
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                borderRadius: 15,
+                cursor: "pointer",
+                transition: "all 0.2s",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.transform = "scale(0.97)";
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
               }}
             >
-              Sections
-            </div>
-            {Object.keys(SECTION_TEMPLATES).map((key) => (
-              <div
-                key={key}
-                onClick={() => handleAddSection(key)}
+              <span style={{ fontSize: 18 }}>+</span>
+              <span
                 style={{
-                  padding: 12,
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  borderRadius: 15,
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.1)";
-                  e.currentTarget.style.borderColor = "1px solid rgba(255,255,255,0.25)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.06)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-                }}
-                onMouseDown={(e) => {
-                  e.currentTarget.style.transform = "scale(0.97)";
-                }}
-                onMouseUp={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
+                  fontSize: 13,
+                  color: "#fff",
+                  fontWeight: 500,
+                  textTransform: "capitalize",
                 }}
               >
-                <span style={{ fontSize: 18 }}>+</span>
-                <span
-                  style={{
-                    fontSize: 13,
-                    color: "#fff",
-                    fontWeight: 500,
-                    textTransform: "capitalize",
-                  }}
-                >
-                  {key}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {activeTab === "Layers" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <div
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                letterSpacing: 0.5,
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.6)",
-                marginBottom: 4,
-              }}
-            >
-              Page Layout ({pageLayout.sections.length})
+                {key}
+              </span>
             </div>
-            {pageLayout.sections.length === 0 ? (
-              <div style={{
-                padding: 16,
-                background: "rgba(255,255,255,0.03)",
-                borderRadius: 15,
-                fontSize: 12,
-                color: "rgba(255,255,255,0.5)",
-                textAlign: "center",
-              }}>
-                No sections yet
-              </div>
-            ) : (
-              pageLayout.sections.map((section, index) => (
-                <div
-                  key={section.id}
-                  style={{
-                    padding: 10,
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    borderRadius: 15,
-                    fontSize: 12,
-                    color: "rgba(255,255,255,0.9)",
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div>
-                      <div style={{ fontWeight: 500, textTransform: "capitalize" }}>
-                        {index + 1}. {section.type}
-                      </div>
-                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.6)", marginTop: 2 }}>
-                        #{section.id.slice(-6)}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </aside>
   );
