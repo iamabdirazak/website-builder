@@ -28,7 +28,7 @@ export default function BuilderApp() {
     name: 'Untitled Page',
     width: 800,
     height: 600,
-    background: "#ffffff",
+    background: "rgba(25,25,27,0.75)",
     radius: 0,
     padding: 0,
     opacity: 1,
