@@ -205,7 +205,7 @@ export default function Toolbar({
                 color: "#fff",
                 fontSize: isMobile ? 12 : 14,
                 fontWeight: 600,
-                padding: isMobile ? "6px 35px" : "6px 50px",
+                padding: isMobile ? "6px 35px" : "6px 25px",
                 borderRadius: 15,
                 width: "100%",
                 textAlign: "center",
