@@ -284,6 +284,7 @@ export default function PageContainer({
                   >
                     {isMobile ? (
                       <>
+                      <div style={{ display: "flex" }}>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -291,18 +292,20 @@ export default function PageContainer({
                           }}
                           disabled={index === 0}
                           style={{
-                            background: "rgba(255,255,255,0.2)",
+                            padding: "4px 15px",
+                            background: "rgba(25,25,27,0.75)",
+                            backdropFilter: "blur(25px) saturate(180%)",
                             border: "none",
                             borderRadius: 4,
-                            padding: "6px 10px",
                             color: "#fff",
                             fontSize: 14,
                             cursor: index === 0 ? "not-allowed" : "pointer",
                             opacity: index === 0 ? 0.5 : 1,
-                            fontWeight: 600
+                            fontWeight: 600,
+                            borderRight: "1px solid rgba(255,255,255,0.08)",
                           }}
                         >
-                          ↑
+                          <img src="/moveUp.png" style={{ width: 20, height: 15 }} />
                         </button>
                         <button
                           onClick={(e) => {
@@ -311,19 +314,22 @@ export default function PageContainer({
                           }}
                           disabled={index === pageLayout.sections.length - 1}
                           style={{
-                            background: "rgba(255,255,255,0.2)",
+                            padding: "4px 15px",
+                            background: "rgba(25,25,27,0.75)",
+                            backdropFilter: "blur(25px) saturate(180%)",
                             border: "none",
                             borderRadius: 4,
-                            padding: "6px 10px",
                             color: "#fff",
                             fontSize: 14,
                             cursor: index === pageLayout.sections.length - 1 ? "not-allowed" : "pointer",
                             opacity: index === pageLayout.sections.length - 1 ? 0.5 : 1,
-                            fontWeight: 600
+                            fontWeight: 600,
+                            borderRight: "1px solid rgba(255,255,255,0.08)",
                           }}
                         >
-                          ↓
+                          <img src="/moveDown.png" style={{ width: 20, height: 15 }} />
                         </button>
+                      </div>
                       </>
                     ) : (
                       <div
@@ -345,6 +351,26 @@ export default function PageContainer({
                         <img src="/lines.png" style={{ width: 20, height: 15 }} />
                       </div>
                     )}
+
+                    {/* <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                          color: "#fff",
+                          fontSize: 11,
+                          fontWeight: 600,
+                          padding: "4px 15px",
+                          background: "rgba(25,25,27,0.75)",
+                          backdropFilter: "blur(25px) saturate(180%)",
+                          borderRight: "1px solid rgba(255,255,255,0.08)",
+                          cursor: "grab",
+                          userSelect: "none"
+                        }}
+                      >
+                        <img src="/lines.png" style={{ width: 20, height: 15 }} />
+                      </div> */}
+
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
