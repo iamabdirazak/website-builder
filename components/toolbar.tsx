@@ -220,7 +220,7 @@ export default function Toolbar({
               <div
                 style={{
                   position: "absolute",
-                  right: isMobile ? "8px" : "14px",
+                  right: isMobile ? "10px" : "14px",
                   display: "flex",
                   alignItems: "center",
                   pointerEvents: "none",
