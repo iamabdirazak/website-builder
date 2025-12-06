@@ -353,25 +353,6 @@ export default function PageContainer({
                       </div>
                     )}
 
-                    {/* <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 6,
-                          color: "#fff",
-                          fontSize: 11,
-                          fontWeight: 600,
-                          padding: "4px 15px",
-                          background: "rgba(25,25,27,0.75)",
-                          backdropFilter: "blur(25px) saturate(180%)",
-                          borderRight: "1px solid rgba(255,255,255,0.08)",
-                          cursor: "grab",
-                          userSelect: "none"
-                        }}
-                      >
-                        <img src="/lines.png" style={{ width: 20, height: 15 }} />
-                      </div> */}
-
                     <button
                       onClick={(e) => {
                         e.stopPropagation();

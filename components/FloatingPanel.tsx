@@ -33,7 +33,6 @@ export default function FloatingPanel({ children, onClose, position = 'left' }: 
           [position]: 0,
           width: 300,
           height: 'calc(100vh - 60px)',
-          background: 'rgba(25,25,27,0.95)',
           backdropFilter: 'blur(25px) saturate(180%)',
           borderRight: position === 'left' ? '1px solid rgba(255,255,255,0.08)' : 'none',
           borderLeft: position === 'right' ? '1px solid rgba(255,255,255,0.08)' : 'none',
