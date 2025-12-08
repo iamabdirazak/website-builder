@@ -66,13 +66,13 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
 
       {/* Content */}
       <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
           {Object.keys(SECTION_TEMPLATES).map((key) => (
             <div
               key={key}
               onClick={() => handleAddSection(key)}
               style={{
-                padding: 12,
+                padding: 15,
                 background: "rgba(255,255,255,0.06)",
                 border: "1px solid rgba(255,255,255,0.1)",
                 borderRadius: 15,
@@ -80,7 +80,7 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
                 transition: "all 0.2s",
                 display: "flex",
                 alignItems: "center",
-                gap: 10,
+                gap: 15,
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = "rgba(255,255,255,0.1)";
@@ -100,9 +100,9 @@ export default function Sidebar({ canvasSections, setCanvasSections, pageLayout,
               <span style={{ fontSize: 18 }}>+</span>
               <span
                 style={{
-                  fontSize: 13,
-                  color: "#fff",
-                  fontWeight: 500,
+                  fontSize: 15,
+                  color: "#f5f5f5",
+                  fontWeight: 600,
                   textTransform: "capitalize",
                 }}
               >
